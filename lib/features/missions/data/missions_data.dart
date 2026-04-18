@@ -1,0 +1,258 @@
+import '../domain/mission_model.dart';
+
+const List<MissionModel> missionsData = [
+  MissionModel(
+    id: 'password-breach',
+    title: 'Password Breach',
+    difficulty: 'Facile',
+    category: 'Authentification',
+    xpReward: 80,
+    scenario:
+        'Une équipe remarque des connexions suspectes sur des comptes partagés. Ta mission est de contenir le risque et renforcer l’authentification.',
+    requiredXp: 40,
+    prerequisiteCourses: ['password-auth'],
+    steps: [
+      MissionStep(
+        title: 'Étape 1 - Signal faible',
+        prompt: 'Quel indicateur est le plus prioritaire ?',
+        options: [
+          'Pics d’échecs de connexion sur plusieurs comptes',
+          'Changement de fond d’écran utilisateur',
+          'Suppression d’un vieux fichier local',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'Un volume anormal d’échecs d’authentification est un indicateur classique de tentative d’accès illégitime.',
+      ),
+      MissionStep(
+        title: 'Étape 2 - Action immédiate',
+        prompt: 'Quelle mesure défensive appliquer en premier ?',
+        options: [
+          'Forcer la rotation des mots de passe + activer MFA',
+          'Désactiver tous les logs',
+          'Partager un mot de passe temporaire commun',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'La réduction du risque passe par la rotation des secrets et l’ajout d’un second facteur.',
+      ),
+      MissionStep(
+        title: 'Étape 3 - Prévention durable',
+        prompt: 'Quelle politique limite les incidents futurs ?',
+        options: [
+          'Gestionnaire de mots de passe + longueur minimale + MFA',
+          'Un mot de passe unique pour toute l’équipe',
+          'Suppression des alertes de sécurité',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'Une politique d’identité forte combine bonnes pratiques utilisateurs et contrôles techniques.',
+      ),
+    ],
+  ),
+  MissionModel(
+    id: 'phishing-alert',
+    title: 'Phishing Alert',
+    difficulty: 'Facile',
+    category: 'Ingénierie sociale',
+    xpReward: 90,
+    scenario:
+        'Des emails “urgence paiement” circulent. Tu dois aider l’équipe à trier le vrai du faux sans cliquer sur des liens risqués.',
+    requiredXp: 90,
+    prerequisiteCourses: ['phishing'],
+    steps: [
+      MissionStep(
+        title: 'Étape 1 - Inspection',
+        prompt: 'Quel élément vérifies-tu en priorité ?',
+        options: [
+          'Domaine exact de l’expéditeur',
+          'Couleur du logo dans l’email',
+          'Position du message dans la boîte',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'Le domaine réel de l’expéditeur et des liens est un signal décisif pour détecter l’usurpation.',
+      ),
+      MissionStep(
+        title: 'Étape 2 - Lien suspect',
+        prompt: 'Un lien affiche “intranet-entreprise.com” mais pointe ailleurs. Que faire ?',
+        options: [
+          'Ne pas cliquer, signaler immédiatement',
+          'Cliquer depuis un mobile personnel',
+          'Transférer le lien à tous pour avis',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'Le texte visible peut masquer une URL malveillante. La bonne pratique est de ne pas exécuter et de signaler.',
+      ),
+      MissionStep(
+        title: 'Étape 3 - Sensibilisation',
+        prompt: 'Quel message diffuser à l’équipe ?',
+        options: [
+          'Toujours vérifier expéditeur, URL, urgence artificielle et demandes sensibles',
+          'Répondre à tous les emails suspects',
+          'Ignorer les emails de sécurité',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'La pédagogie collective réduit fortement le risque d’ingénierie sociale.',
+      ),
+    ],
+  ),
+  MissionModel(
+    id: 'port-scan-basics',
+    title: 'Port Scan Basics',
+    difficulty: 'Moyen',
+    category: 'Réseaux',
+    xpReward: 120,
+    scenario:
+        'Tu analyses un serveur simulé qui expose plusieurs services. Objectif: réduire la surface d’exposition.',
+    requiredXp: 180,
+    prerequisiteCourses: ['ports-services'],
+    steps: [
+      MissionStep(
+        title: 'Étape 1 - Lecture terminal simulée',
+        prompt: 'Le scan simulé indique ports 22, 80, 3306 ouverts. Quelle décision est la plus sûre ?',
+        options: [
+          'Fermer 3306 en accès public et restreindre au réseau interne',
+          'Ouvrir tous les ports 1-65535 pour simplifier',
+          'Désactiver totalement le pare-feu',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'Les bases de données ne doivent pas être exposées publiquement sans nécessité et contrôle strict.',
+        terminalSnippet: r'''$ net-sim scan target-01
+[SIM] open: 22/tcp ssh
+[SIM] open: 80/tcp http
+[SIM] open: 3306/tcp mysql''',
+      ),
+      MissionStep(
+        title: 'Étape 2 - Contrôle d’accès',
+        prompt: 'Quelle stratégie appliquer au service SSH ?',
+        options: [
+          'Limiter par IP autorisées et clés fortes',
+          'Autoriser mot de passe faible pour tous',
+          'Désactiver toute journalisation',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'Le contrôle d’accès fort sur SSH limite les tentatives automatiques et améliore la traçabilité.',
+      ),
+      MissionStep(
+        title: 'Étape 3 - Monitoring',
+        prompt: 'Quel indicateur suivre après durcissement ?',
+        options: [
+          'Tentatives de connexion refusées et alertes pare-feu',
+          'Nombre de fonds d’écran changés',
+          'Nombre de redémarrages manuels',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'Les événements réseau et auth permettent de vérifier l’efficacité des mesures.',
+      ),
+    ],
+  ),
+  MissionModel(
+    id: 'sql-awareness-mission',
+    title: 'SQL Injection Awareness',
+    difficulty: 'Difficile',
+    category: 'Sécurité web',
+    xpReward: 140,
+    scenario:
+        'Une application simulée retourne des erreurs SQL après saisie utilisateur. Tu dois proposer des corrections défensives.',
+    requiredXp: 320,
+    prerequisiteCourses: ['sqli-awareness'],
+    steps: [
+      MissionStep(
+        title: 'Étape 1 - Cause probable',
+        prompt: 'Quelle cause explique le risque SQLi ?',
+        options: [
+          'Concaténation directe des entrées dans la requête',
+          'Utilisation de requêtes préparées',
+          'Validation stricte côté serveur',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'La concaténation brute d’entrées utilisateur est la cause classique des injections SQL.',
+        terminalSnippet:
+            r"[SIM] log web: SELECT * FROM users WHERE email='input' AND pass='input'",
+      ),
+      MissionStep(
+        title: 'Étape 2 - Remédiation',
+        prompt: 'Quelle correction doit être priorisée ?',
+        options: [
+          'Paramétrer les requêtes et valider les entrées',
+          'Masquer les erreurs sans corriger le code',
+          'Supprimer toute authentification',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'Le correctif structurel est la paramétrisation + validation, pas le masquage.',
+      ),
+      MissionStep(
+        title: 'Étape 3 - Contrôle continu',
+        prompt: 'Quel garde-fou long terme ?',
+        options: [
+          'Revues de code sécurité + tests automatisés d’entrées',
+          'Ne plus modifier le code applicatif',
+          'Désactiver les logs applicatifs',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'La prévention durable repose sur le cycle de développement sécurisé.',
+      ),
+    ],
+  ),
+  MissionModel(
+    id: 'server-defense',
+    title: 'Server Defense',
+    difficulty: 'Expert',
+    category: 'Blue Team',
+    xpReward: 180,
+    scenario:
+        'Un serveur critique présente des anomalies de trafic et de comptes. Tu dois coordonner une réponse défensive complète.',
+    requiredXp: 520,
+    prerequisiteCourses: ['incident-response', 'defense-depth'],
+    steps: [
+      MissionStep(
+        title: 'Étape 1 - Confinement',
+        prompt: 'Quelle action initiale est la plus adaptée ?',
+        options: [
+          'Isoler le serveur du segment non critique tout en conservant les preuves',
+          'Redémarrer immédiatement sans collecte',
+          'Supprimer les logs pour gagner de la place',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'La réponse à incident commence par le confinement et la préservation de preuves.',
+      ),
+      MissionStep(
+        title: 'Étape 2 - Analyse guidée',
+        prompt: 'Quel artefact est prioritaire pour comprendre l’incident ?',
+        options: [
+          'Timeline corrélée logs système + auth + réseau',
+          'Historique des thèmes visuels du serveur',
+          'Liste des fichiers temporaires non système seulement',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'La corrélation multi-source est indispensable pour établir la chronologie fiable.',
+        terminalSnippet: r'''$ ir-sim timeline --sources auth,syslog,netflow
+[SIM] suspicious login burst
+[SIM] lateral movement attempt blocked''',
+      ),
+      MissionStep(
+        title: 'Étape 3 - Durcissement final',
+        prompt: 'Quel plan est le plus robuste ?',
+        options: [
+          'Patch, segmentation, MFA admin, alertes SIEM, revue post-incident',
+          'Revenir à la configuration précédente sans analyse',
+          'Désactiver les alertes pour réduire le bruit',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'Une défense en profondeur combine correctifs, identité forte, surveillance et amélioration continue.',
+      ),
+    ],
+  ),
+];
