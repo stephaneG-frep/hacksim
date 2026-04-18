@@ -4,8 +4,10 @@ import 'core/state/hacksim_controller.dart';
 import 'core/theme/app_theme.dart';
 import 'features/courses/presentation/course_detail_screen.dart';
 import 'features/courses/presentation/course_quiz_screen.dart';
+import 'features/challenges/presentation/daily_challenge_screen.dart';
 import 'features/courses/presentation/courses_screen.dart';
 import 'features/home/presentation/home_screen.dart';
+import 'features/home/presentation/main_shell.dart';
 import 'features/missions/presentation/mission_detail_screen.dart';
 import 'features/missions/presentation/missions_screen.dart';
 import 'features/profile/presentation/profile_screen.dart';
@@ -25,12 +27,14 @@ class HackSimApp extends StatelessWidget {
           title: 'HackSim',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.dark,
-          home: HomeScreen(controller: controller),
+          home: MainShell(controller: controller),
           routes: {
+            DailyChallengeScreen.routeName: (_) => DailyChallengeScreen(controller: controller),
             CoursesScreen.routeName: (_) => CoursesScreen(controller: controller),
             MissionsScreen.routeName: (_) => MissionsScreen(controller: controller),
             ProgressionScreen.routeName: (_) => ProgressionScreen(controller: controller),
             ProfileScreen.routeName: (_) => ProfileScreen(controller: controller),
+            '/legacy-home': (_) => HomeScreen(controller: controller),
           },
           onGenerateRoute: (settings) {
             if (settings.name == CourseDetailScreen.routeName) {

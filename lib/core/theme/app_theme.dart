@@ -50,6 +50,22 @@ class AppTheme {
         side: const BorderSide(color: accent),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: panel,
+        indicatorColor: accent.withValues(alpha: 0.22),
+        iconTheme: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return const IconThemeData(color: accent);
+          }
+          return const IconThemeData(color: Colors.white70);
+        }),
+        labelTextStyle: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return const TextStyle(color: accent, fontWeight: FontWeight.w700);
+          }
+          return const TextStyle(color: Colors.white70);
+        }),
+      ),
     );
   }
 }

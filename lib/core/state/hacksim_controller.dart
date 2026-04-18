@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 
+import '../../features/challenges/data/daily_challenges_data.dart';
+import '../../features/challenges/domain/daily_challenge_model.dart';
 import '../../features/courses/data/courses_data.dart';
 import '../../features/courses/domain/course_model.dart';
 import '../../features/missions/data/missions_data.dart';
@@ -14,9 +16,11 @@ class HackSimController extends ChangeNotifier {
   final Set<String> _completedCourses = <String>{};
   final Set<String> _validatedQuizzes = <String>{};
   final Set<String> _completedMissions = <String>{};
+  final Set<String> _completedDailyChallenges = <String>{};
   final Set<String> _badges = <String>{};
 
   int _totalXp = 0;
+  int _seasonXp = 0;
   String _pseudo = 'CyberCadet';
 
   static Future<HackSimController> create() async {
@@ -29,13 +33,37 @@ class HackSimController extends ChangeNotifier {
   List<MissionModel> get missions => missionsData;
 
   int get totalXp => _totalXp;
+  int get seasonXp => _seasonXp;
   String get pseudo => _pseudo;
   int get level => (_totalXp ~/ 200) + 1;
+  DateTime get today => DateTime.now();
 
   Set<String> get completedCourseIds => Set<String>.unmodifiable(_completedCourses);
   Set<String> get validatedQuizIds => Set<String>.unmodifiable(_validatedQuizzes);
   Set<String> get completedMissionIds => Set<String>.unmodifiable(_completedMissions);
+  Set<String> get completedDailyChallengeIds => Set<String>.unmodifiable(_completedDailyChallenges);
   Set<String> get badges => Set<String>.unmodifiable(_badges);
+
+  DailyChallengeModel get todaysChallenge {
+    final now = today;
+    final dayOfYear = now.difference(DateTime(now.year, 1, 1)).inDays + 1;
+    final index = dayOfYear % dailyChallengeTemplates.length;
+    return dailyChallengeTemplates[index];
+  }
+
+  String get seasonLabel {
+    final month = today.month;
+    final season = switch (month) {
+      <= 3 => 'Saison Hiver',
+      <= 6 => 'Saison Printemps',
+      <= 9 => 'Saison Été',
+      _ => 'Saison Automne',
+    };
+    return '$season ${today.year}';
+  }
+
+  int get completedDailyChallengesCount => _completedDailyChallenges.length;
+  bool isDailyChallengeCompleted(String challengeId) => _completedDailyChallenges.contains(challengeId);
 
   CourseModel courseById(String id) => courses.firstWhere((course) => course.id == id);
   MissionModel missionById(String id) => missions.firstWhere((mission) => mission.id == id);
@@ -85,6 +113,7 @@ class HackSimController extends ChangeNotifier {
     _validatedQuizzes.add(courseId);
     _completedCourses.add(courseId);
     _totalXp += xpReward;
+    _seasonXp += xpReward;
     _recomputeBadges();
     await _persistAndNotify();
   }
@@ -96,6 +125,20 @@ class HackSimController extends ChangeNotifier {
 
     _completedMissions.add(missionId);
     _totalXp += xpReward;
+    _seasonXp += xpReward;
+    _recomputeBadges();
+    await _persistAndNotify();
+  }
+
+  Future<void> completeDailyChallenge() async {
+    final challenge = todaysChallenge;
+    final challengeId = challenge.idForDate(today);
+    if (_completedDailyChallenges.contains(challengeId)) {
+      return;
+    }
+    _completedDailyChallenges.add(challengeId);
+    _totalXp += challenge.xpReward;
+    _seasonXp += challenge.xpReward;
     _recomputeBadges();
     await _persistAndNotify();
   }
@@ -111,10 +154,14 @@ class HackSimController extends ChangeNotifier {
     _completedMissions
       ..clear()
       ..addAll(snapshot.completedMissions);
+    _completedDailyChallenges
+      ..clear()
+      ..addAll(snapshot.completedDailyChallenges);
     _badges
       ..clear()
       ..addAll(snapshot.badges);
     _totalXp = snapshot.totalXp;
+    _seasonXp = snapshot.seasonXp;
     _pseudo = snapshot.pseudo;
     _recomputeBadges();
   }
@@ -125,8 +172,10 @@ class HackSimController extends ChangeNotifier {
         completedCourses: _completedCourses,
         validatedQuizzes: _validatedQuizzes,
         completedMissions: _completedMissions,
+        completedDailyChallenges: _completedDailyChallenges,
         badges: _badges,
         totalXp: _totalXp,
+        seasonXp: _seasonXp,
         pseudo: _pseudo,
       ),
     );
@@ -141,6 +190,12 @@ class HackSimController extends ChangeNotifier {
     }
     if (_validatedQuizzes.length >= 4) {
       newBadges.add('Apprenant Régulier');
+    }
+    if (_completedDailyChallenges.isNotEmpty) {
+      newBadges.add('Sentinelle Quotidienne');
+    }
+    if (_completedDailyChallenges.length >= 7) {
+      newBadges.add('Rituel Cyber');
     }
     if (_completedMissions.contains('port-scan-basics')) {
       newBadges.add('Analyste Réseau');

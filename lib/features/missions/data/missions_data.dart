@@ -255,4 +255,102 @@ const List<MissionModel> missionsData = [
       ),
     ],
   ),
+  MissionModel(
+    id: 'log-hunter',
+    title: 'Log Hunter',
+    difficulty: 'Difficile',
+    category: 'Détection',
+    xpReward: 155,
+    scenario:
+        'Une alerte de connexion anormale est remontée. Tu dois trier signal et bruit dans les logs simulés.',
+    requiredXp: 380,
+    prerequisiteCourses: ['logs-monitoring'],
+    steps: [
+      MissionStep(
+        title: 'Étape 1 - Priorisation',
+        prompt: 'Quel événement est le plus suspect ?',
+        options: [
+          'Plusieurs échecs MFA suivis d’une réussite depuis une IP inconnue',
+          'Un redémarrage planifié validé en maintenance',
+          'Un accès à la documentation interne',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'La séquence échecs successifs puis réussite inattendue est typique d’un comportement à investiguer.',
+      ),
+      MissionStep(
+        title: 'Étape 2 - Corrélation',
+        prompt: 'Quelle source croiser ensuite ?',
+        options: [
+          'Netflow et logs endpoint de la même fenêtre temporelle',
+          'Historique des fonds d’écran',
+          'Statistiques de batterie des laptops',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'La corrélation réseau + poste de travail améliore la fiabilité de l’analyse.',
+      ),
+      MissionStep(
+        title: 'Étape 3 - Mesure défensive',
+        prompt: 'Quelle action est la plus adaptée ?',
+        options: [
+          'Bloquer l’IP, réinitialiser le compte, ouvrir un ticket d’incident',
+          'Supprimer tous les logs pour alléger le SIEM',
+          'Attendre plusieurs jours sans action',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'La réponse doit être traçable, rapide et coordonnée pour limiter la fenêtre d’attaque.',
+      ),
+    ],
+  ),
+  MissionModel(
+    id: 'secure-release',
+    title: 'Secure Release Gate',
+    difficulty: 'Expert',
+    category: 'DevSecOps',
+    xpReward: 190,
+    scenario:
+        'Ton équipe prépare une release. Tu dois valider une checklist sécurité avant déploiement en production simulée.',
+    requiredXp: 620,
+    prerequisiteCourses: ['secure-app', 'defense-depth'],
+    steps: [
+      MissionStep(
+        title: 'Étape 1 - Pré-check',
+        prompt: 'Quelle vérification doit bloquer une release ?',
+        options: [
+          'Vulnérabilité critique non corrigée dans une dépendance exposée',
+          'Nom de branche non conventionnel',
+          'Couleur du thème non finalisée',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'Une dépendance vulnérable critique est un risque immédiat à traiter avant mise en production.',
+      ),
+      MissionStep(
+        title: 'Étape 2 - Secret management',
+        prompt: 'Quel choix est correct pour les secrets ?', 
+        options: [
+          'Stockage dans un coffre dédié et rotation planifiée',
+          'Secrets en clair dans le dépôt',
+          'Partage du token admin dans le chat équipe',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'Les secrets doivent être externalisés et rotés pour réduire exposition et impact.', 
+      ),
+      MissionStep(
+        title: 'Étape 3 - Go/No-Go',
+        prompt: 'Quand autoriser le déploiement ?', 
+        options: [
+          'Après correction critique + tests sécurité passants + plan rollback',
+          'Dès que les tests visuels sont valides',
+          'Sans journalisation pour maximiser performances',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'Le go-live sécurisé combine remédiation, validation et capacité de retour arrière.',
+      ),
+    ],
+  ),
 ];

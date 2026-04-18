@@ -45,6 +45,11 @@ List<LessonSection> _lessons(String focus) {
       content:
           'Résumé actionnable: habitudes sûres, pièges fréquents, et règles simples pour renforcer la sécurité sans outils offensifs.',
     ),
+    LessonSection(
+      title: 'Mini étude de cas',
+      content:
+          'Cas simulé autour de $focus: tu appliques une logique défensive, puis tu compares ta décision à une correction expliquée.',
+    ),
   ];
 }
 
@@ -84,6 +89,18 @@ List<CourseQuizQuestion> _quiz({
       correctOptionIndex: 1,
       explanation:
           'La majorité des incidents impliquent de la manipulation sociale ou des erreurs d’hygiène numérique.',
+    ),
+    CourseQuizQuestion(
+      prompt: 'Quel réflexe améliore le plus la résilience équipe ?',
+      options: const [
+        'Documenter incidents et retours d’expérience',
+        'Garder les incidents secrets pour éviter les questions',
+        'Ignorer les alertes faibles',
+        'Confondre vitesse et sécurité',
+      ],
+      correctOptionIndex: 0,
+      explanation:
+          'Le retour d’expérience partagé améliore durablement les procédures et réduit la répétition des erreurs.',
     ),
   ];
 }

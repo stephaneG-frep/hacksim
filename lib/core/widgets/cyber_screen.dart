@@ -78,6 +78,38 @@ class CyberCard extends StatelessWidget {
   }
 }
 
+class AnimatedCyberCard extends StatelessWidget {
+  const AnimatedCyberCard({
+    super.key,
+    required this.child,
+    this.onTap,
+    this.order = 0,
+  });
+
+  final Widget child;
+  final VoidCallback? onTap;
+  final int order;
+
+  @override
+  Widget build(BuildContext context) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween<double>(begin: 0, end: 1),
+      duration: Duration(milliseconds: 300 + (order * 70)),
+      curve: Curves.easeOutCubic,
+      builder: (context, value, currentChild) {
+        return Opacity(
+          opacity: value,
+          child: Transform.translate(
+            offset: Offset(0, (1 - value) * 16),
+            child: currentChild,
+          ),
+        );
+      },
+      child: CyberCard(onTap: onTap, child: child),
+    );
+  }
+}
+
 class TerminalPanel extends StatelessWidget {
   const TerminalPanel({super.key, required this.text});
 

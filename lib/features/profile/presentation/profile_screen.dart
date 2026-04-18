@@ -4,11 +4,16 @@ import '../../../core/state/hacksim_controller.dart';
 import '../../../core/widgets/cyber_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key, required this.controller});
+  const ProfileScreen({
+    super.key,
+    required this.controller,
+    this.embedded = false,
+  });
 
   static const routeName = '/profile';
 
   final HackSimController controller;
+  final bool embedded;
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -33,71 +38,95 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final controller = widget.controller;
 
+    final content = ListView(
+      children: [
+        TextField(
+          controller: _pseudoController,
+          decoration: const InputDecoration(labelText: 'Pseudo'),
+        ),
+        const SizedBox(height: 10),
+        ElevatedButton(
+          onPressed: () async {
+            await controller.updatePseudo(_pseudoController.text);
+            if (!context.mounted) {
+              return;
+            }
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Pseudo mis à jour.')));
+          },
+          child: const Text('Enregistrer'),
+        ),
+        const SizedBox(height: 16),
+        AnimatedCyberCard(
+          order: 0,
+          child: ListTile(
+            title: const Text('XP totale'),
+            trailing: Text('${controller.totalXp} XP'),
+          ),
+        ),
+        AnimatedCyberCard(
+          order: 1,
+          child: ListTile(
+            title: const Text('XP de saison'),
+            subtitle: Text(controller.seasonLabel),
+            trailing: Text('${controller.seasonXp} XP'),
+          ),
+        ),
+        AnimatedCyberCard(
+          order: 2,
+          child: ListTile(
+            title: const Text('Niveau'),
+            trailing: Text('Niv. ${controller.level}'),
+          ),
+        ),
+        AnimatedCyberCard(
+          order: 3,
+          child: ListTile(
+            title: const Text('Cours validés'),
+            trailing: Text('${controller.validatedQuizIds.length}'),
+          ),
+        ),
+        AnimatedCyberCard(
+          order: 4,
+          child: ListTile(
+            title: const Text('Missions terminées'),
+            trailing: Text('${controller.completedMissionIds.length}'),
+          ),
+        ),
+        AnimatedCyberCard(
+          order: 5,
+          child: ListTile(
+            title: const Text('Défis quotidiens validés'),
+            trailing: Text('${controller.completedDailyChallengesCount}'),
+          ),
+        ),
+        AnimatedCyberCard(
+          order: 6,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Badges', style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 8),
+              if (controller.badges.isEmpty)
+                const Text('Aucun badge débloqué.')
+              else
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: controller.badges.map((badge) => Chip(label: Text(badge))).toList(),
+                ),
+            ],
+          ),
+        ),
+      ],
+    );
+
+    if (widget.embedded) {
+      return CyberScreen(child: content);
+    }
+
     return Scaffold(
       appBar: AppBar(title: const Text('Profil')),
-      body: CyberScreen(
-        child: ListView(
-          children: [
-            TextField(
-              controller: _pseudoController,
-              decoration: const InputDecoration(labelText: 'Pseudo'),
-            ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () async {
-                await controller.updatePseudo(_pseudoController.text);
-                if (!context.mounted) {
-                  return;
-                }
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Pseudo mis à jour.')));
-              },
-              child: const Text('Enregistrer'),
-            ),
-            const SizedBox(height: 16),
-            CyberCard(
-              child: ListTile(
-                title: const Text('XP totale'),
-                trailing: Text('${controller.totalXp} XP'),
-              ),
-            ),
-            CyberCard(
-              child: ListTile(
-                title: const Text('Niveau'),
-                trailing: Text('Niv. ${controller.level}'),
-              ),
-            ),
-            CyberCard(
-              child: ListTile(
-                title: const Text('Cours validés'),
-                trailing: Text('${controller.validatedQuizIds.length}'),
-              ),
-            ),
-            CyberCard(
-              child: ListTile(
-                title: const Text('Missions terminées'),
-                trailing: Text('${controller.completedMissionIds.length}'),
-              ),
-            ),
-            CyberCard(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Badges', style: Theme.of(context).textTheme.titleMedium),
-                  const SizedBox(height: 8),
-                  if (controller.badges.isEmpty)
-                    const Text('Aucun badge débloqué.')
-                  else
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: controller.badges.map((badge) => Chip(label: Text(badge))).toList(),
-                    ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+      body: CyberScreen(child: content),
     );
   }
 }
