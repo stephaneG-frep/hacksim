@@ -6,6 +6,7 @@ import 'features/courses/presentation/course_detail_screen.dart';
 import 'features/courses/presentation/course_quiz_screen.dart';
 import 'features/challenges/presentation/daily_challenge_screen.dart';
 import 'features/courses/presentation/courses_screen.dart';
+import 'features/help/presentation/user_guide_screen.dart';
 import 'features/home/presentation/home_screen.dart';
 import 'features/home/presentation/main_shell.dart';
 import 'features/missions/presentation/mission_detail_screen.dart';
@@ -30,6 +31,7 @@ class HackSimApp extends StatelessWidget {
           home: MainShell(controller: controller),
           routes: {
             DailyChallengeScreen.routeName: (_) => DailyChallengeScreen(controller: controller),
+            UserGuideScreen.routeName: (_) => const UserGuideScreen(),
             CoursesScreen.routeName: (_) => CoursesScreen(controller: controller),
             MissionsScreen.routeName: (_) => MissionsScreen(controller: controller),
             ProgressionScreen.routeName: (_) => ProgressionScreen(controller: controller),
