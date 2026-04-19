@@ -11,8 +11,10 @@ import 'features/home/presentation/home_screen.dart';
 import 'features/home/presentation/main_shell.dart';
 import 'features/missions/presentation/mission_detail_screen.dart';
 import 'features/missions/presentation/missions_screen.dart';
+import 'features/onboarding/presentation/onboarding_screen.dart';
 import 'features/profile/presentation/profile_screen.dart';
 import 'features/progression/presentation/progression_screen.dart';
+import 'features/settings/presentation/settings_screen.dart';
 
 class HackSimApp extends StatelessWidget {
   const HackSimApp({super.key, required this.controller});
@@ -28,10 +30,16 @@ class HackSimApp extends StatelessWidget {
           title: 'HackSim',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.dark,
-          home: MainShell(controller: controller),
+          home: controller.onboardingSeen
+              ? MainShell(controller: controller)
+              : OnboardingScreen(
+                  controller: controller,
+                  onDone: () {},
+                ),
           routes: {
             DailyChallengeScreen.routeName: (_) => DailyChallengeScreen(controller: controller),
             UserGuideScreen.routeName: (_) => const UserGuideScreen(),
+            SettingsScreen.routeName: (_) => SettingsScreen(controller: controller),
             CoursesScreen.routeName: (_) => CoursesScreen(controller: controller),
             MissionsScreen.routeName: (_) => MissionsScreen(controller: controller),
             ProgressionScreen.routeName: (_) => ProgressionScreen(controller: controller),

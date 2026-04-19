@@ -7,6 +7,7 @@ import '../../help/presentation/user_guide_screen.dart';
 import '../../missions/presentation/missions_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
 import '../../progression/presentation/progression_screen.dart';
+import '../../settings/presentation/settings_screen.dart';
 import 'home_screen.dart';
 
 class MainShell extends StatefulWidget {
@@ -31,6 +32,7 @@ class _MainShellState extends State<MainShell> {
       ProfileScreen(controller: widget.controller, embedded: true),
       DailyChallengeScreen(controller: widget.controller, embedded: true),
       const UserGuideScreen(embedded: true),
+      SettingsScreen(controller: widget.controller, embedded: true),
     ];
 
     final titles = [
@@ -41,6 +43,7 @@ class _MainShellState extends State<MainShell> {
       'Profil',
       'Défi Quotidien',
       'Mode d\'emploi',
+      'Paramètres',
     ];
 
     return Scaffold(
@@ -143,6 +146,12 @@ class _MainShellState extends State<MainShell> {
                       selected: _index == 6,
                       onTap: () => _goTo(6),
                     ),
+                    _DrawerItem(
+                      icon: Icons.settings_rounded,
+                      label: 'Paramètres',
+                      selected: _index == 7,
+                      onTap: () => _goTo(7),
+                    ),
                   ],
                 ),
               ),
@@ -151,10 +160,15 @@ class _MainShellState extends State<MainShell> {
         ),
       ),
       body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 360),
+        duration: widget.controller.animationsEnabled
+            ? const Duration(milliseconds: 360)
+            : Duration.zero,
         switchInCurve: Curves.easeOutCubic,
         switchOutCurve: Curves.easeInCubic,
         transitionBuilder: (child, animation) {
+          if (!widget.controller.animationsEnabled) {
+            return child;
+          }
           final slide = Tween<Offset>(begin: const Offset(0.02, 0), end: Offset.zero)
               .animate(CurvedAnimation(parent: animation, curve: Curves.easeOutCubic));
           return FadeTransition(

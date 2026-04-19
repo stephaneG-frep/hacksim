@@ -22,6 +22,10 @@ class HackSimController extends ChangeNotifier {
   int _totalXp = 0;
   int _seasonXp = 0;
   String _pseudo = 'CyberCadet';
+  bool _animationsEnabled = true;
+  bool _soundEnabled = true;
+  bool _showOnlyUnlockedDefault = false;
+  bool _onboardingSeen = false;
 
   static Future<HackSimController> create() async {
     final controller = HackSimController._(LocalProgressStore());
@@ -37,6 +41,10 @@ class HackSimController extends ChangeNotifier {
   String get pseudo => _pseudo;
   int get level => (_totalXp ~/ 200) + 1;
   DateTime get today => DateTime.now();
+  bool get animationsEnabled => _animationsEnabled;
+  bool get soundEnabled => _soundEnabled;
+  bool get showOnlyUnlockedDefault => _showOnlyUnlockedDefault;
+  bool get onboardingSeen => _onboardingSeen;
 
   Set<String> get completedCourseIds => Set<String>.unmodifiable(_completedCourses);
   Set<String> get validatedQuizIds => Set<String>.unmodifiable(_validatedQuizzes);
@@ -99,6 +107,41 @@ class HackSimController extends ChangeNotifier {
 
   Future<void> updatePseudo(String value) async {
     _pseudo = value.trim().isEmpty ? 'CyberCadet' : value.trim();
+    await _persistAndNotify();
+  }
+
+  Future<void> setAnimationsEnabled(bool value) async {
+    _animationsEnabled = value;
+    await _persistAndNotify();
+  }
+
+  Future<void> setSoundEnabled(bool value) async {
+    _soundEnabled = value;
+    await _persistAndNotify();
+  }
+
+  Future<void> setShowOnlyUnlockedDefault(bool value) async {
+    _showOnlyUnlockedDefault = value;
+    await _persistAndNotify();
+  }
+
+  Future<void> markOnboardingSeen() async {
+    if (_onboardingSeen) {
+      return;
+    }
+    _onboardingSeen = true;
+    await _persistAndNotify();
+  }
+
+  Future<void> resetProgress() async {
+    _completedCourses.clear();
+    _validatedQuizzes.clear();
+    _completedMissions.clear();
+    _completedDailyChallenges.clear();
+    _badges.clear();
+    _totalXp = 0;
+    _seasonXp = 0;
+    _recomputeBadges();
     await _persistAndNotify();
   }
 
@@ -165,6 +208,10 @@ class HackSimController extends ChangeNotifier {
     _totalXp = snapshot.totalXp;
     _seasonXp = snapshot.seasonXp;
     _pseudo = snapshot.pseudo;
+    _animationsEnabled = snapshot.animationsEnabled;
+    _soundEnabled = snapshot.soundEnabled;
+    _showOnlyUnlockedDefault = snapshot.showOnlyUnlockedDefault;
+    _onboardingSeen = snapshot.onboardingSeen;
     _recomputeBadges();
   }
 
@@ -179,6 +226,10 @@ class HackSimController extends ChangeNotifier {
         totalXp: _totalXp,
         seasonXp: _seasonXp,
         pseudo: _pseudo,
+        animationsEnabled: _animationsEnabled,
+        soundEnabled: _soundEnabled,
+        showOnlyUnlockedDefault: _showOnlyUnlockedDefault,
+        onboardingSeen: _onboardingSeen,
       ),
     );
     notifyListeners();

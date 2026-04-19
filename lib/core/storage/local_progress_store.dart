@@ -10,6 +10,10 @@ class LocalProgressSnapshot {
     required this.totalXp,
     required this.seasonXp,
     required this.pseudo,
+    required this.animationsEnabled,
+    required this.soundEnabled,
+    required this.showOnlyUnlockedDefault,
+    required this.onboardingSeen,
   });
 
   final Set<String> completedCourses;
@@ -20,6 +24,10 @@ class LocalProgressSnapshot {
   final int totalXp;
   final int seasonXp;
   final String pseudo;
+  final bool animationsEnabled;
+  final bool soundEnabled;
+  final bool showOnlyUnlockedDefault;
+  final bool onboardingSeen;
 }
 
 class LocalProgressStore {
@@ -31,6 +39,10 @@ class LocalProgressStore {
   static const _totalXpKey = 'total_xp';
   static const _seasonXpKey = 'season_xp';
   static const _pseudoKey = 'pseudo';
+  static const _animationsEnabledKey = 'animations_enabled';
+  static const _soundEnabledKey = 'sound_enabled';
+  static const _showOnlyUnlockedDefaultKey = 'show_unlocked_default';
+  static const _onboardingSeenKey = 'onboarding_seen';
 
   Future<LocalProgressSnapshot> load() async {
     final prefs = await SharedPreferences.getInstance();
@@ -43,6 +55,10 @@ class LocalProgressStore {
       totalXp: prefs.getInt(_totalXpKey) ?? 0,
       seasonXp: prefs.getInt(_seasonXpKey) ?? 0,
       pseudo: prefs.getString(_pseudoKey) ?? 'CyberCadet',
+      animationsEnabled: prefs.getBool(_animationsEnabledKey) ?? true,
+      soundEnabled: prefs.getBool(_soundEnabledKey) ?? true,
+      showOnlyUnlockedDefault: prefs.getBool(_showOnlyUnlockedDefaultKey) ?? false,
+      onboardingSeen: prefs.getBool(_onboardingSeenKey) ?? false,
     );
   }
 
@@ -56,5 +72,9 @@ class LocalProgressStore {
     await prefs.setInt(_totalXpKey, snapshot.totalXp);
     await prefs.setInt(_seasonXpKey, snapshot.seasonXp);
     await prefs.setString(_pseudoKey, snapshot.pseudo);
+    await prefs.setBool(_animationsEnabledKey, snapshot.animationsEnabled);
+    await prefs.setBool(_soundEnabledKey, snapshot.soundEnabled);
+    await prefs.setBool(_showOnlyUnlockedDefaultKey, snapshot.showOnlyUnlockedDefault);
+    await prefs.setBool(_onboardingSeenKey, snapshot.onboardingSeen);
   }
 }

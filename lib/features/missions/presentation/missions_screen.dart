@@ -4,7 +4,7 @@ import '../../../core/state/hacksim_controller.dart';
 import '../../../core/widgets/cyber_screen.dart';
 import 'mission_detail_screen.dart';
 
-class MissionsScreen extends StatelessWidget {
+class MissionsScreen extends StatefulWidget {
   const MissionsScreen({
     super.key,
     required this.controller,
@@ -17,59 +17,143 @@ class MissionsScreen extends StatelessWidget {
   final bool embedded;
 
   @override
-  Widget build(BuildContext context) {
-    final content = ListView.builder(
-      itemCount: controller.missions.length,
-      itemBuilder: (context, index) {
-        final mission = controller.missions[index];
-        final unlocked = controller.isMissionUnlocked(mission);
-        final done = controller.isMissionCompleted(mission.id);
+  State<MissionsScreen> createState() => _MissionsScreenState();
+}
 
-        return AnimatedCyberCard(
-          order: index,
-          onTap: unlocked
-              ? () => Navigator.pushNamed(
-                    context,
-                    MissionDetailScreen.routeName,
-                    arguments: mission.id,
-                  )
-              : null,
+class _MissionsScreenState extends State<MissionsScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  String? _difficultyFilter;
+  bool _unlockedOnly = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _unlockedOnly = widget.controller.showOnlyUnlockedDefault;
+    _searchController.addListener(() => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final query = _searchController.text.trim().toLowerCase();
+    final difficulties = widget.controller.missions.map((m) => m.difficulty).toSet().toList()..sort();
+
+    final filtered = widget.controller.missions.where((mission) {
+      final unlocked = widget.controller.isMissionUnlocked(mission);
+      if (_unlockedOnly && !unlocked) {
+        return false;
+      }
+      if (_difficultyFilter != null && mission.difficulty != _difficultyFilter) {
+        return false;
+      }
+      if (query.isEmpty) {
+        return true;
+      }
+      return mission.title.toLowerCase().contains(query) ||
+          mission.category.toLowerCase().contains(query) ||
+          mission.difficulty.toLowerCase().contains(query);
+    }).toList();
+
+    int order = 0;
+    final content = ListView(
+      children: [
+        AnimatedCyberCard(
+          order: order++,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Icon(
-                    done ? Icons.shield_rounded : (unlocked ? Icons.play_circle_fill_rounded : Icons.lock_rounded),
-                    color: done ? Colors.greenAccent : Colors.white70,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      mission.title,
-                      style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
-                    ),
-                  ),
-                ],
+              TextField(
+                controller: _searchController,
+                decoration: const InputDecoration(
+                  labelText: 'Rechercher une mission',
+                  prefixIcon: Icon(Icons.search_rounded),
+                ),
               ),
               const SizedBox(height: 10),
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
                 children: [
-                  Chip(label: Text(mission.difficulty)),
-                  Chip(label: Text(mission.category)),
-                  Chip(label: Text('${mission.xpReward} XP')),
-                  Chip(label: Text(unlocked ? 'Déverrouillée' : 'Verrouillée')),
+                  FilterChip(
+                    label: const Text('Déverrouillées'),
+                    selected: _unlockedOnly,
+                    onSelected: (v) => setState(() => _unlockedOnly = v),
+                  ),
+                  ...difficulties.map(
+                    (difficulty) => ChoiceChip(
+                      label: Text(difficulty),
+                      selected: _difficultyFilter == difficulty,
+                      onSelected: (_) {
+                        setState(() {
+                          _difficultyFilter = _difficultyFilter == difficulty ? null : difficulty;
+                        });
+                      },
+                    ),
+                  ),
                 ],
               ),
             ],
           ),
-        );
-      },
+        ),
+        ...filtered.asMap().entries.map((entry) {
+          final mission = entry.value;
+          final unlocked = widget.controller.isMissionUnlocked(mission);
+          final done = widget.controller.isMissionCompleted(mission.id);
+          return AnimatedCyberCard(
+            order: order++,
+            onTap: unlocked
+                ? () => Navigator.pushNamed(
+                      context,
+                      MissionDetailScreen.routeName,
+                      arguments: mission.id,
+                    )
+                : null,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      done ? Icons.shield_rounded : (unlocked ? Icons.play_circle_fill_rounded : Icons.lock_rounded),
+                      color: done ? Colors.greenAccent : Colors.white70,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        mission.title,
+                        style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    Chip(label: Text(mission.difficulty)),
+                    Chip(label: Text(mission.category)),
+                    Chip(label: Text('${mission.xpReward} XP')),
+                    Chip(label: Text(unlocked ? 'Déverrouillée' : 'Verrouillée')),
+                  ],
+                ),
+              ],
+            ),
+          );
+        }),
+        if (filtered.isEmpty)
+          AnimatedCyberCard(
+            order: order++,
+            child: const Text('Aucune mission ne correspond aux filtres actuels.'),
+          ),
+      ],
     );
 
-    if (embedded) {
+    if (widget.embedded) {
       return CyberScreen(child: content);
     }
 
