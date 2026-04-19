@@ -94,14 +94,17 @@ class AnimatedCyberCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return TweenAnimationBuilder<double>(
       tween: Tween<double>(begin: 0, end: 1),
-      duration: Duration(milliseconds: 300 + (order * 70)),
-      curve: Curves.easeOutCubic,
+      duration: Duration(milliseconds: 260 + (order * 55)),
+      curve: Curves.easeOutQuart,
       builder: (context, value, currentChild) {
         return Opacity(
           opacity: value,
           child: Transform.translate(
-            offset: Offset(0, (1 - value) * 16),
-            child: currentChild,
+            offset: Offset(0, (1 - value) * 12),
+            child: Transform.scale(
+              scale: 0.985 + (value * 0.015),
+              child: currentChild,
+            ),
           ),
         );
       },

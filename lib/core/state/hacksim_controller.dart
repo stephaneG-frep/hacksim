@@ -64,6 +64,8 @@ class HackSimController extends ChangeNotifier {
 
   int get completedDailyChallengesCount => _completedDailyChallenges.length;
   bool isDailyChallengeCompleted(String challengeId) => _completedDailyChallenges.contains(challengeId);
+  int get currentDailyStreak => _computeCurrentStreak(_completedChallengeDays());
+  int get bestDailyStreak => _computeBestStreak(_completedChallengeDays());
 
   CourseModel courseById(String id) => courses.firstWhere((course) => course.id == id);
   MissionModel missionById(String id) => missions.firstWhere((mission) => mission.id == id);
@@ -197,6 +199,12 @@ class HackSimController extends ChangeNotifier {
     if (_completedDailyChallenges.length >= 7) {
       newBadges.add('Rituel Cyber');
     }
+    if (currentDailyStreak >= 3) {
+      newBadges.add('Streak 3 jours');
+    }
+    if (currentDailyStreak >= 7) {
+      newBadges.add('Streak 7 jours');
+    }
     if (_completedMissions.contains('port-scan-basics')) {
       newBadges.add('Analyste Réseau');
     }
@@ -210,5 +218,75 @@ class HackSimController extends ChangeNotifier {
     _badges
       ..clear()
       ..addAll(newBadges);
+  }
+
+  List<DateTime> _completedChallengeDays() {
+    final days = <DateTime>[];
+    for (final id in _completedDailyChallenges) {
+      final parsed = _extractDateFromChallengeId(id);
+      if (parsed != null) {
+        days.add(DateTime(parsed.year, parsed.month, parsed.day));
+      }
+    }
+    days.sort((a, b) => a.compareTo(b));
+    return days;
+  }
+
+  DateTime? _extractDateFromChallengeId(String id) {
+    final parts = id.split('-');
+    if (parts.length < 5 || parts.first != 'daily') {
+      return null;
+    }
+    final year = int.tryParse(parts[1]);
+    final month = int.tryParse(parts[2]);
+    final day = int.tryParse(parts[3]);
+    if (year == null || month == null || day == null) {
+      return null;
+    }
+    return DateTime(year, month, day);
+  }
+
+  int _computeCurrentStreak(List<DateTime> days) {
+    if (days.isEmpty) {
+      return 0;
+    }
+
+    final normalizedToday = DateTime(today.year, today.month, today.day);
+    final daySet = days.toSet();
+    final hasToday = daySet.contains(normalizedToday);
+    final start = hasToday ? normalizedToday : normalizedToday.subtract(const Duration(days: 1));
+    if (!daySet.contains(start)) {
+      return 0;
+    }
+
+    int streak = 0;
+    DateTime cursor = start;
+    while (daySet.contains(cursor)) {
+      streak += 1;
+      cursor = cursor.subtract(const Duration(days: 1));
+    }
+    return streak;
+  }
+
+  int _computeBestStreak(List<DateTime> days) {
+    if (days.isEmpty) {
+      return 0;
+    }
+    int best = 1;
+    int current = 1;
+    for (int i = 1; i < days.length; i++) {
+      final prev = days[i - 1];
+      final curr = days[i];
+      final isNextDay = curr.difference(prev).inDays == 1;
+      if (isNextDay) {
+        current += 1;
+      } else if (curr != prev) {
+        current = 1;
+      }
+      if (current > best) {
+        best = current;
+      }
+    }
+    return best;
   }
 }

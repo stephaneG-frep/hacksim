@@ -59,20 +59,35 @@ class ProgressionScreen extends StatelessWidget {
         AnimatedCyberCard(
           order: 4,
           child: ListTile(
+            title: const Text('Streak actuel'),
+            subtitle: const Text('Jours consécutifs de défis validés'),
+            trailing: Text('${controller.currentDailyStreak} j'),
+          ),
+        ),
+        AnimatedCyberCard(
+          order: 5,
+          child: ListTile(
+            title: const Text('Meilleur streak'),
+            trailing: Text('${controller.bestDailyStreak} j'),
+          ),
+        ),
+        AnimatedCyberCard(
+          order: 6,
+          child: ListTile(
             title: Text(controller.seasonLabel),
             subtitle: const Text('Progression de saison'),
             trailing: Text('${controller.seasonXp} XP'),
           ),
         ),
         AnimatedCyberCard(
-          order: 5,
+          order: 7,
           child: ListTile(
             title: const Text('Niveau utilisateur'),
             trailing: Text('Niv. ${controller.level}'),
           ),
         ),
         AnimatedCyberCard(
-          order: 6,
+          order: 8,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

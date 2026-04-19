@@ -48,68 +48,120 @@ class _MainShellState extends State<MainShell> {
         title: Text(titles[_index]),
       ),
       drawer: Drawer(
-        child: SafeArea(
-          child: Column(
-            children: [
-              ListTile(
-                title: Text(
-                  widget.controller.pseudo,
-                  style: const TextStyle(fontWeight: FontWeight.w700),
+        child: Column(
+          children: [
+            DrawerHeader(
+              margin: EdgeInsets.zero,
+              padding: EdgeInsets.zero,
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [Color(0xFF0B141C), Color(0xFF153245)],
+                  ),
                 ),
-                subtitle: Text('Niveau ${widget.controller.level} • ${widget.controller.totalXp} XP'),
-                leading: const CircleAvatar(child: Icon(Icons.security_rounded)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const CircleAvatar(
+                          radius: 22,
+                          child: Icon(Icons.security_rounded),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            widget.controller.pseudo,
+                            style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Text('Niveau ${widget.controller.level} • ${widget.controller.totalXp} XP'),
+                    const SizedBox(height: 10),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        _StatChip(label: '${widget.controller.currentDailyStreak}j streak'),
+                        _StatChip(label: '${widget.controller.seasonXp} XP saison'),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-              const Divider(),
-              _DrawerItem(
-                icon: Icons.home_rounded,
-                label: 'Accueil',
-                selected: _index == 0,
-                onTap: () => _goTo(0),
+            ),
+            Expanded(
+              child: SafeArea(
+                top: false,
+                child: ListView(
+                  children: [
+                    _DrawerItem(
+                      icon: Icons.home_rounded,
+                      label: 'Accueil',
+                      selected: _index == 0,
+                      onTap: () => _goTo(0),
+                    ),
+                    _DrawerItem(
+                      icon: Icons.menu_book_rounded,
+                      label: 'Cours',
+                      selected: _index == 1,
+                      onTap: () => _goTo(1),
+                    ),
+                    _DrawerItem(
+                      icon: Icons.security_rounded,
+                      label: 'Missions',
+                      selected: _index == 2,
+                      onTap: () => _goTo(2),
+                    ),
+                    _DrawerItem(
+                      icon: Icons.show_chart_rounded,
+                      label: 'Progression',
+                      selected: _index == 3,
+                      onTap: () => _goTo(3),
+                    ),
+                    _DrawerItem(
+                      icon: Icons.person_rounded,
+                      label: 'Profil',
+                      selected: _index == 4,
+                      onTap: () => _goTo(4),
+                    ),
+                    _DrawerItem(
+                      icon: Icons.bolt_rounded,
+                      label: 'Défi quotidien',
+                      selected: _index == 5,
+                      onTap: () => _goTo(5),
+                    ),
+                    _DrawerItem(
+                      icon: Icons.help_center_rounded,
+                      label: 'Mode d\'emploi',
+                      selected: _index == 6,
+                      onTap: () => _goTo(6),
+                    ),
+                  ],
+                ),
               ),
-              _DrawerItem(
-                icon: Icons.menu_book_rounded,
-                label: 'Cours',
-                selected: _index == 1,
-                onTap: () => _goTo(1),
-              ),
-              _DrawerItem(
-                icon: Icons.security_rounded,
-                label: 'Missions',
-                selected: _index == 2,
-                onTap: () => _goTo(2),
-              ),
-              _DrawerItem(
-                icon: Icons.show_chart_rounded,
-                label: 'Progression',
-                selected: _index == 3,
-                onTap: () => _goTo(3),
-              ),
-              _DrawerItem(
-                icon: Icons.person_rounded,
-                label: 'Profil',
-                selected: _index == 4,
-                onTap: () => _goTo(4),
-              ),
-              _DrawerItem(
-                icon: Icons.bolt_rounded,
-                label: 'Défi quotidien',
-                selected: _index == 5,
-                onTap: () => _goTo(5),
-              ),
-              _DrawerItem(
-                icon: Icons.help_center_rounded,
-                label: 'Mode d\'emploi',
-                selected: _index == 6,
-                onTap: () => _goTo(6),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
       body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 280),
+        duration: const Duration(milliseconds: 360),
         switchInCurve: Curves.easeOutCubic,
         switchOutCurve: Curves.easeInCubic,
+        transitionBuilder: (child, animation) {
+          final slide = Tween<Offset>(begin: const Offset(0.02, 0), end: Offset.zero)
+              .animate(CurvedAnimation(parent: animation, curve: Curves.easeOutCubic));
+          return FadeTransition(
+            opacity: animation,
+            child: SlideTransition(position: slide, child: child),
+          );
+        },
         child: KeyedSubtree(
           key: ValueKey(_index),
           child: tabs[_index],
@@ -144,6 +196,25 @@ class _DrawerItem extends StatelessWidget {
       title: Text(label),
       selected: selected,
       onTap: onTap,
+    );
+  }
+}
+
+class _StatChip extends StatelessWidget {
+  const _StatChip({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: Colors.black.withValues(alpha: 0.25),
+        border: Border.all(color: const Color(0xFF00E5A8).withValues(alpha: 0.4)),
+      ),
+      child: Text(label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
     );
   }
 }

@@ -101,6 +101,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         AnimatedCyberCard(
           order: 6,
+          child: ListTile(
+            title: const Text('Streak quotidien'),
+            subtitle: Text('Best: ${controller.bestDailyStreak} jours'),
+            trailing: Text('${controller.currentDailyStreak} j'),
+          ),
+        ),
+        AnimatedCyberCard(
+          order: 7,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
