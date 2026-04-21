@@ -1,0 +1,67 @@
+[
+  {
+    "id": "zero-trust",
+    "title": "Zero Trust Architecture",
+    "level": "advanced",
+    "category": "Architecture",
+    "durationMinutes": 25,
+    "xpReward": 130,
+    "description": "Le modele Zero Trust repose sur le principe 'ne jamais faire confiance, toujours verifier'. Il supprime la notion de perimetre reseau de confiance.",
+    "objectives": [
+      "Comprendre le principe du moindre privilege",
+      "Identifier les piliers Zero Trust : identite, appareil, reseau, application, donnees",
+      "Appliquer la microsegmentation reseau"
+    ],
+    "lessons": [
+      {
+        "title": "Origine du Zero Trust",
+        "content": "Le modele traditionnel de securite perimetrique suppose que tout ce qui est dans le reseau interne est de confiance. Zero Trust inverse ce paradigme : chaque acces doit etre authentifie et autorise, que la requete vienne de l'interieur ou de l'exterieur."
+      },
+      {
+        "title": "Les 5 piliers",
+        "content": "1. Identite : MFA et acces conditionnel. 2. Appareils : conformite et gestion MDM. 3. Reseau : microsegmentation et chiffrement. 4. Applications : acces granulaire et RBAC. 5. Donnees : classification et DLP."
+      },
+      {
+        "title": "Mise en oeuvre pratique",
+        "content": "Commencer par cartographier les flux de donnees critiques, puis appliquer le principe du moindre privilege sur chaque flux. Mettre en place des politiques d'acces conditionnel avant de segmenter le reseau."
+      },
+      {
+        "title": "Cas concret",
+        "content": "Un collaborateur en teletravail tente d'acceder a une application RH. Zero Trust verifie : identite (MFA valide), appareil (conforme MDM), localisation (politique geographique), puis accorde un acces minimal aux seules ressources necessaires."
+      }
+    ],
+    "quiz": [
+      {
+        "prompt": "Quel est le principe fondateur du Zero Trust ?",
+        "options": [
+          "Ne jamais faire confiance, toujours verifier",
+          "Faire confiance au reseau interne par defaut",
+          "Bloquer tout trafic externe uniquement"
+        ],
+        "correctOptionIndex": 0,
+        "explanation": "Zero Trust suppose que la menace peut venir de n'importe ou, y compris de l'interieur du reseau."
+      },
+      {
+        "prompt": "Quelle technique de reseau est centrale dans Zero Trust ?",
+        "options": [
+          "Microsegmentation",
+          "VPN unique partagé",
+          "Ouverture de tous les ports internes"
+        ],
+        "correctOptionIndex": 0,
+        "explanation": "La microsegmentation limite les deplacements lateraux en cas de compromission d'un segment."
+      },
+      {
+        "prompt": "Parmi ces elements, lequel n'est PAS un pilier Zero Trust ?",
+        "options": [
+          "Confiance implicite au perimetre",
+          "Verification de l'identite",
+          "Controle de la conformite des appareils"
+        ],
+        "correctOptionIndex": 0,
+        "explanation": "La confiance perimetrique est exactement ce que Zero Trust cherche a eliminer."
+      }
+    ],
+    "prerequisites": ["defense-depth"]
+  }
+]

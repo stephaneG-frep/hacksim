@@ -23,6 +23,21 @@ class DailyChallengeModel {
   final int xpReward;
   final List<String> requiredQuizIds;
 
+  factory DailyChallengeModel.fromJson(Map<String, dynamic> json) {
+    return DailyChallengeModel(
+      templateId: json['templateId'] as String,
+      title: json['title'] as String,
+      category: json['category'] as String,
+      learningFocus: json['learningFocus'] as String,
+      prompt: json['prompt'] as String,
+      options: List<String>.from(json['options'] as List),
+      correctOptionIndex: json['correctOptionIndex'] as int,
+      explanation: json['explanation'] as String,
+      xpReward: json['xpReward'] as int,
+      requiredQuizIds: List<String>.from((json['requiredQuizIds'] as List?) ?? []),
+    );
+  }
+
   String idForDate(DateTime date) {
     final day =
         '${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';

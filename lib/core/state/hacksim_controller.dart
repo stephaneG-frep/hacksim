@@ -1,19 +1,17 @@
 import 'package:flutter/foundation.dart';
 
-import '../../features/challenges/data/daily_challenges_data.dart';
 import '../../features/challenges/domain/daily_challenge_model.dart';
-import '../../features/campaigns/data/campaigns_data.dart';
 import '../../features/campaigns/domain/campaign_model.dart';
-import '../../features/courses/data/courses_data.dart';
 import '../../features/courses/domain/course_model.dart';
-import '../../features/missions/data/missions_data.dart';
 import '../../features/missions/domain/mission_model.dart';
+import '../content/content_repository.dart';
 import '../storage/local_progress_store.dart';
 
 class HackSimController extends ChangeNotifier {
-  HackSimController._(this._store);
+  HackSimController._(this._store, this._content);
 
   final LocalProgressStore _store;
+  final ContentRepository _content;
 
   final Set<String> _completedCourses = <String>{};
   final Set<String> _validatedQuizzes = <String>{};
@@ -30,14 +28,15 @@ class HackSimController extends ChangeNotifier {
   bool _onboardingSeen = false;
 
   static Future<HackSimController> create() async {
-    final controller = HackSimController._(LocalProgressStore());
+    final content = await ContentRepository.load();
+    final controller = HackSimController._(LocalProgressStore(), content);
     await controller._load();
     return controller;
   }
 
-  List<CourseModel> get courses => coursesData;
-  List<MissionModel> get missions => missionsData;
-  List<CampaignModel> get campaigns => campaignsData;
+  List<CourseModel> get courses => _content.courses;
+  List<MissionModel> get missions => _content.missions;
+  List<CampaignModel> get campaigns => _content.campaigns;
 
   int get totalXp => _totalXp;
   int get seasonXp => _seasonXp;
@@ -56,7 +55,7 @@ class HackSimController extends ChangeNotifier {
   Set<String> get badges => Set<String>.unmodifiable(_badges);
 
   List<DailyChallengeModel> get availableDailyChallenges {
-    return dailyChallengeTemplates.where((challenge) {
+    return _content.dailyChallenges.where((challenge) {
       return challenge.requiredQuizIds.every(_validatedQuizzes.contains);
     }).toList();
   }
@@ -65,8 +64,8 @@ class HackSimController extends ChangeNotifier {
     final eligible = availableDailyChallenges;
     final pool = eligible.isNotEmpty
         ? eligible
-        : dailyChallengeTemplates.where((challenge) => challenge.requiredQuizIds.isEmpty).toList();
-    final finalPool = pool.isNotEmpty ? pool : dailyChallengeTemplates;
+        : _content.dailyChallenges.where((challenge) => challenge.requiredQuizIds.isEmpty).toList();
+    final finalPool = pool.isNotEmpty ? pool : _content.dailyChallenges;
     final now = today;
     final dayOfYear = now.difference(DateTime(now.year, 1, 1)).inDays + 1;
     final index = dayOfYear % finalPool.length;

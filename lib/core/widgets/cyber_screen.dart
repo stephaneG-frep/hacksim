@@ -141,6 +141,177 @@ class TerminalPanel extends StatelessWidget {
   }
 }
 
+/// Terminal interactif : affiche un historique de commandes et un champ de saisie.
+/// [expectedCommand] est la commande attendue (comparaison insensible à la casse, espaces ignorés).
+/// [successOutput] est la sortie affichée après une commande correcte.
+/// [onSuccess] est appelé quand la commande est validée.
+class InteractiveTerminal extends StatefulWidget {
+  const InteractiveTerminal({
+    super.key,
+    required this.prompt,
+    required this.expectedCommand,
+    required this.successOutput,
+    required this.onSuccess,
+    this.hint,
+    this.initialLines = const [],
+    this.alreadyDone = false,
+  });
+
+  final String prompt;
+  final String expectedCommand;
+  final String successOutput;
+  final VoidCallback onSuccess;
+  final String? hint;
+  final List<String> initialLines;
+  final bool alreadyDone;
+
+  @override
+  State<InteractiveTerminal> createState() => _InteractiveTerminalState();
+}
+
+class _InteractiveTerminalState extends State<InteractiveTerminal> {
+  final TextEditingController _inputCtrl = TextEditingController();
+  final List<String> _lines = [];
+  bool _done = false;
+  bool _error = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _lines.addAll(widget.initialLines);
+    if (widget.alreadyDone) {
+      _lines.add('\$ ${widget.expectedCommand}');
+      _lines.add(widget.successOutput);
+      _done = true;
+    }
+  }
+
+  @override
+  void dispose() {
+    _inputCtrl.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    final input = _inputCtrl.text.trim();
+    if (input.isEmpty) return;
+    final expected = widget.expectedCommand.trim().toLowerCase();
+    final correct = input.toLowerCase() == expected;
+
+    setState(() {
+      _lines.add('\$ $input');
+      _error = !correct;
+      if (correct) {
+        _lines.add(widget.successOutput);
+        _done = true;
+      } else {
+        _lines.add('-bash: $input: command not found');
+      }
+      _inputCtrl.clear();
+    });
+
+    if (correct) widget.onSuccess();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.black,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: _done
+              ? const Color(0xFF00E5A8).withValues(alpha: 0.8)
+              : (_error ? Colors.redAccent.withValues(alpha: 0.7) : const Color(0xFF00E5A8).withValues(alpha: 0.45)),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // barre titre terminal
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: const Color(0xFF00E5A8).withValues(alpha: 0.08),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(11)),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.terminal_rounded, size: 14, color: Color(0xFF65FFBF)),
+                const SizedBox(width: 6),
+                Text(
+                  widget.prompt,
+                  style: const TextStyle(fontFamily: 'monospace', fontSize: 12, color: Color(0xFF65FFBF)),
+                ),
+                const Spacer(),
+                if (_done) const Icon(Icons.check_circle_rounded, size: 14, color: Color(0xFF00E5A8)),
+              ],
+            ),
+          ),
+          // historique
+          if (_lines.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 10, 12, 4),
+              child: Text(
+                _lines.join('\n'),
+                style: TextStyle(
+                  fontFamily: 'monospace',
+                  fontSize: 12,
+                  color: _done ? const Color(0xFF65FFBF) : Colors.white70,
+                  height: 1.4,
+                ),
+              ),
+            ),
+          // champ de saisie
+          if (!_done)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 4, 12, 10),
+              child: Row(
+                children: [
+                  const Text(
+                    '\$ ',
+                    style: TextStyle(fontFamily: 'monospace', color: Color(0xFF65FFBF), fontSize: 13),
+                  ),
+                  Expanded(
+                    child: TextField(
+                      controller: _inputCtrl,
+                      style: const TextStyle(fontFamily: 'monospace', color: Colors.white, fontSize: 13),
+                      decoration: InputDecoration(
+                        isDense: true,
+                        border: InputBorder.none,
+                        hintText: widget.hint ?? widget.expectedCommand,
+                        hintStyle: const TextStyle(color: Colors.white24, fontFamily: 'monospace', fontSize: 13),
+                        contentPadding: EdgeInsets.zero,
+                      ),
+                      onSubmitted: (_) => _submit(),
+                      autofocus: false,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: _submit,
+                    icon: const Icon(Icons.keyboard_return_rounded, size: 18, color: Color(0xFF00E5A8)),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  ),
+                ],
+              ),
+            ),
+          if (!_done && widget.hint != null)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+              child: Text(
+                'Indice : ${widget.hint}',
+                style: const TextStyle(fontSize: 11, color: Colors.white38, fontFamily: 'monospace'),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
 class _GridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {

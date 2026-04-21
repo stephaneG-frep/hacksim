@@ -21,6 +21,20 @@ class _MissionDetailScreenState extends ConsumerState<MissionDetailScreen> {
   int? _selected;
   bool _revealed = false;
   bool _finished = false;
+  bool _commandDone = false; // terminal interactif validé pour l'étape courante
+
+  void _nextStep() {
+    if (_stepIndex == ref.read(hackSimControllerProvider).missionById(widget.missionId).steps.length - 1) {
+      setState(() => _finished = true);
+    } else {
+      setState(() {
+        _stepIndex += 1;
+        _selected = null;
+        _revealed = false;
+        _commandDone = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +91,10 @@ class _MissionDetailScreenState extends ConsumerState<MissionDetailScreen> {
     }
 
     final step = mission.steps[_stepIndex];
+    final hasCommand = step.commandChallenge != null;
     final isCorrect = _selected == step.correctOptionIndex;
+    // Le QCM est accessible seulement si pas de commande requise, ou si la commande est validée.
+    final qcmUnlocked = !hasCommand || _commandDone;
 
     return Scaffold(
       appBar: AppBar(title: Text(mission.title)),
@@ -95,59 +112,87 @@ class _MissionDetailScreenState extends ConsumerState<MissionDetailScreen> {
               ),
             ),
             const SizedBox(height: 8),
-            Text('Étape ${_stepIndex + 1}/${mission.steps.length}',
-                style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              'Étape ${_stepIndex + 1}/${mission.steps.length}',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             const SizedBox(height: 6),
-            Text(step.title),
+            Text(step.title, style: const TextStyle(fontWeight: FontWeight.w600)),
             const SizedBox(height: 12),
-            if (step.terminalSnippet != null) TerminalPanel(text: step.terminalSnippet!),
-            Text(step.prompt),
-            const SizedBox(height: 10),
-            ...List.generate(step.options.length, (optionIndex) {
-              final option = step.options[optionIndex];
-              Color? color;
-              if (_revealed && optionIndex == step.correctOptionIndex) {
-                color = Colors.green.withValues(alpha: 0.25);
-              } else if (_revealed && _selected == optionIndex && !isCorrect) {
-                color = Colors.red.withValues(alpha: 0.25);
-              }
-              return Card(
-                color: color,
-                child: ListTile(
-                  title: Text(option),
-                  onTap: _revealed
-                      ? null
-                      : () {
-                          setState(() {
-                            final pickedCorrect = optionIndex == step.correctOptionIndex;
-                            _selected = optionIndex;
-                            _revealed = true;
-                            if (pickedCorrect) _score += 1;
-                          });
-                        },
-                ),
-              );
-            }),
-            if (_revealed) ...[
-              const SizedBox(height: 8),
-              Text(isCorrect ? 'Bonne décision.' : 'Décision à corriger.'),
-              const SizedBox(height: 6),
-              Text('Explication: ${step.explanation}'),
-              const SizedBox(height: 12),
-              ElevatedButton(
-                onPressed: () {
-                  if (_stepIndex == mission.steps.length - 1) {
-                    setState(() => _finished = true);
-                  } else {
-                    setState(() {
-                      _stepIndex += 1;
-                      _selected = null;
-                      _revealed = false;
-                    });
-                  }
-                },
-                child: Text(_stepIndex == mission.steps.length - 1 ? 'Voir le score final' : 'Étape suivante'),
+
+            // Terminal passif (snippet de contexte seulement)
+            if (step.terminalSnippet != null && !hasCommand)
+              TerminalPanel(text: step.terminalSnippet!),
+
+            // Terminal interactif
+            if (hasCommand)
+              InteractiveTerminal(
+                prompt: 'terminal simulé',
+                expectedCommand: step.commandChallenge!,
+                successOutput: step.commandOutput ?? '[SIM] Commande exécutée avec succès.',
+                hint: step.commandHint,
+                initialLines: step.terminalSnippet != null ? step.terminalSnippet!.split('\n') : [],
+                alreadyDone: _commandDone,
+                onSuccess: () => setState(() => _commandDone = true),
               ),
+
+            // Prompt QCM verrouillé si commande non encore faite
+            if (hasCommand && !qcmUnlocked)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Row(
+                  children: [
+                    const Icon(Icons.lock_rounded, size: 16, color: Colors.white38),
+                    const SizedBox(width: 6),
+                    Text(
+                      'Entre la commande pour déverrouiller cette étape.',
+                      style: const TextStyle(color: Colors.white38, fontSize: 13),
+                    ),
+                  ],
+                ),
+              ),
+
+            if (qcmUnlocked) ...[
+              Text(step.prompt),
+              const SizedBox(height: 10),
+              ...List.generate(step.options.length, (optionIndex) {
+                final option = step.options[optionIndex];
+                Color? color;
+                if (_revealed && optionIndex == step.correctOptionIndex) {
+                  color = Colors.green.withValues(alpha: 0.25);
+                } else if (_revealed && _selected == optionIndex && !isCorrect) {
+                  color = Colors.red.withValues(alpha: 0.25);
+                }
+                return Card(
+                  color: color,
+                  child: ListTile(
+                    title: Text(option),
+                    onTap: _revealed
+                        ? null
+                        : () {
+                            setState(() {
+                              final pickedCorrect = optionIndex == step.correctOptionIndex;
+                              _selected = optionIndex;
+                              _revealed = true;
+                              if (pickedCorrect) _score += 1;
+                            });
+                          },
+                  ),
+                );
+              }),
+              if (_revealed) ...[
+                const SizedBox(height: 8),
+                Text(isCorrect ? 'Bonne décision.' : 'Décision à corriger.'),
+                const SizedBox(height: 6),
+                Text('Explication: ${step.explanation}'),
+                const SizedBox(height: 12),
+                ElevatedButton(
+                  onPressed: _nextStep,
+                  child: Text(
+                    _stepIndex == mission.steps.length - 1 ? 'Voir le score final' : 'Étape suivante',
+                  ),
+                ),
+              ],
             ],
           ],
         ),

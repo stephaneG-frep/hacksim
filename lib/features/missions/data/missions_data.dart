@@ -121,10 +121,9 @@ const List<MissionModel> missionsData = [
         correctOptionIndex: 0,
         explanation:
             'Les bases de données ne doivent pas être exposées publiquement sans nécessité et contrôle strict.',
-        terminalSnippet: r'''$ net-sim scan target-01
-[SIM] open: 22/tcp ssh
-[SIM] open: 80/tcp http
-[SIM] open: 3306/tcp mysql''',
+        commandChallenge: "net-sim scan target-01",
+        commandHint: "net-sim scan <cible>",
+        commandOutput: "[SIM] open: 22/tcp ssh\n[SIM] open: 80/tcp http\n[SIM] open: 3306/tcp mysql\n[SIM] Scan complet.",
       ),
       MissionStep(
         title: 'Étape 2 - Contrôle d’accès',
@@ -174,8 +173,9 @@ const List<MissionModel> missionsData = [
         correctOptionIndex: 0,
         explanation:
             'La concaténation brute d’entrées utilisateur est la cause classique des injections SQL.',
-        terminalSnippet:
-            r"[SIM] log web: SELECT * FROM users WHERE email='input' AND pass='input'",
+        commandChallenge: "db-sim inspect-log",
+        commandHint: "db-sim inspect-log",
+        commandOutput: "[SIM] query: SELECT * FROM users WHERE email='input' AND pass='input'\n[SIM] WARNING: SQLi risk HIGH",
       ),
       MissionStep(
         title: 'Étape 2 - Remédiation',
@@ -237,9 +237,9 @@ const List<MissionModel> missionsData = [
         correctOptionIndex: 0,
         explanation:
             'La corrélation multi-source est indispensable pour établir la chronologie fiable.',
-        terminalSnippet: r'''$ ir-sim timeline --sources auth,syslog,netflow
-[SIM] suspicious login burst
-[SIM] lateral movement attempt blocked''',
+        commandChallenge: "ir-sim timeline --sources auth,syslog,netflow",
+        commandHint: "ir-sim timeline --sources auth,syslog,netflow",
+        commandOutput: "[SIM] 03:12 suspicious login burst — 48 attempts\n[SIM] 03:14 lateral movement attempt BLOCKED\n[SIM] Timeline exportée.",
       ),
       MissionStep(
         title: 'Étape 3 - Durcissement final',

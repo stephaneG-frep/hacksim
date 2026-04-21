@@ -20,6 +20,13 @@ class LessonSection {
 
   final String title;
   final String content;
+
+  factory LessonSection.fromJson(Map<String, dynamic> json) {
+    return LessonSection(
+      title: json['title'] as String,
+      content: json['content'] as String,
+    );
+  }
 }
 
 class CourseQuizQuestion {
@@ -34,6 +41,15 @@ class CourseQuizQuestion {
   final List<String> options;
   final int correctOptionIndex;
   final String explanation;
+
+  factory CourseQuizQuestion.fromJson(Map<String, dynamic> json) {
+    return CourseQuizQuestion(
+      prompt: json['prompt'] as String,
+      options: List<String>.from(json['options'] as List),
+      correctOptionIndex: json['correctOptionIndex'] as int,
+      explanation: json['explanation'] as String,
+    );
+  }
 }
 
 class CourseModel {
@@ -62,4 +78,25 @@ class CourseModel {
   final List<LessonSection> lessons;
   final List<CourseQuizQuestion> quiz;
   final List<String> prerequisites;
+
+  factory CourseModel.fromJson(Map<String, dynamic> json) {
+    final levelStr = json['level'] as String;
+    final level = CourseLevel.values.firstWhere(
+      (l) => l.name == levelStr,
+      orElse: () => CourseLevel.beginner,
+    );
+    return CourseModel(
+      id: json['id'] as String,
+      title: json['title'] as String,
+      level: level,
+      category: json['category'] as String,
+      durationMinutes: json['durationMinutes'] as int,
+      xpReward: json['xpReward'] as int,
+      description: json['description'] as String,
+      objectives: List<String>.from(json['objectives'] as List),
+      lessons: (json['lessons'] as List).map((l) => LessonSection.fromJson(l as Map<String, dynamic>)).toList(),
+      quiz: (json['quiz'] as List).map((q) => CourseQuizQuestion.fromJson(q as Map<String, dynamic>)).toList(),
+      prerequisites: List<String>.from((json['prerequisites'] as List?) ?? []),
+    );
+  }
 }
