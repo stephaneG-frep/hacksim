@@ -9,7 +9,7 @@ const List<MissionModel> missionsData = [
     xpReward: 80,
     scenario:
         'Une équipe remarque des connexions suspectes sur des comptes partagés. Ta mission est de contenir le risque et renforcer l’authentification.',
-    requiredXp: 40,
+    requiredXp: 0,
     prerequisiteCourses: ['password-auth'],
     steps: [
       MissionStep(
@@ -58,7 +58,7 @@ const List<MissionModel> missionsData = [
     xpReward: 90,
     scenario:
         'Des emails “urgence paiement” circulent. Tu dois aider l’équipe à trier le vrai du faux sans cliquer sur des liens risqués.',
-    requiredXp: 90,
+    requiredXp: 0,
     prerequisiteCourses: ['phishing'],
     steps: [
       MissionStep(
@@ -107,7 +107,7 @@ const List<MissionModel> missionsData = [
     xpReward: 120,
     scenario:
         'Tu analyses un serveur simulé qui expose plusieurs services. Objectif: réduire la surface d’exposition.',
-    requiredXp: 180,
+    requiredXp: 0,
     prerequisiteCourses: ['ports-services'],
     steps: [
       MissionStep(
@@ -159,7 +159,7 @@ const List<MissionModel> missionsData = [
     xpReward: 140,
     scenario:
         'Une application simulée retourne des erreurs SQL après saisie utilisateur. Tu dois proposer des corrections défensives.',
-    requiredXp: 320,
+    requiredXp: 0,
     prerequisiteCourses: ['sqli-awareness'],
     steps: [
       MissionStep(
@@ -211,7 +211,7 @@ const List<MissionModel> missionsData = [
     xpReward: 180,
     scenario:
         'Un serveur critique présente des anomalies de trafic et de comptes. Tu dois coordonner une réponse défensive complète.',
-    requiredXp: 520,
+    requiredXp: 0,
     prerequisiteCourses: ['incident-response', 'defense-depth'],
     steps: [
       MissionStep(
@@ -263,7 +263,7 @@ const List<MissionModel> missionsData = [
     xpReward: 155,
     scenario:
         'Une alerte de connexion anormale est remontée. Tu dois trier signal et bruit dans les logs simulés.',
-    requiredXp: 380,
+    requiredXp: 0,
     prerequisiteCourses: ['logs-monitoring'],
     steps: [
       MissionStep(
@@ -312,7 +312,7 @@ const List<MissionModel> missionsData = [
     xpReward: 190,
     scenario:
         'Ton équipe prépare une release. Tu dois valider une checklist sécurité avant déploiement en production simulée.',
-    requiredXp: 620,
+    requiredXp: 0,
     prerequisiteCourses: ['secure-app', 'defense-depth'],
     steps: [
       MissionStep(
@@ -361,7 +361,7 @@ const List<MissionModel> missionsData = [
     xpReward: 115,
     scenario:
         'Un smartphone professionnel est perdu. Tu dois sécuriser l’accès aux données et limiter l’exposition.',
-    requiredXp: 220,
+    requiredXp: 0,
     prerequisiteCourses: ['mobile-security-basics'],
     steps: [
       MissionStep(
@@ -410,7 +410,7 @@ const List<MissionModel> missionsData = [
     xpReward: 125,
     scenario:
         'Après un incident simulé, plusieurs fichiers critiques sont indisponibles. Ta mission: restaurer de façon fiable.',
-    requiredXp: 260,
+    requiredXp: 0,
     prerequisiteCourses: ['backup-recovery'],
     steps: [
       MissionStep(
@@ -459,7 +459,7 @@ const List<MissionModel> missionsData = [
     xpReward: 145,
     scenario:
         'Un audit révèle des privilèges excessifs. Tu dois corriger les accès sans casser la production simulée.',
-    requiredXp: 400,
+    requiredXp: 0,
     prerequisiteCourses: ['iam-basics'],
     steps: [
       MissionStep(
@@ -508,7 +508,7 @@ const List<MissionModel> missionsData = [
     xpReward: 160,
     scenario:
         'Une configuration cloud simulée expose des ressources critiques. Tu dois appliquer des garde-fous.',
-    requiredXp: 500,
+    requiredXp: 0,
     prerequisiteCourses: ['cloud-security-fundamentals'],
     steps: [
       MissionStep(
@@ -557,7 +557,7 @@ const List<MissionModel> missionsData = [
     xpReward: 175,
     scenario:
         'Une API métier reçoit un trafic anormal. Tu dois renforcer l’authentification et limiter les abus.',
-    requiredXp: 640,
+    requiredXp: 0,
     prerequisiteCourses: ['api-security-essentials'],
     steps: [
       MissionStep(
@@ -606,7 +606,7 @@ const List<MissionModel> missionsData = [
     xpReward: 210,
     scenario:
         'Une intrusion simulée est suspectée. Tu dois piloter la collecte et l’analyse forensique sans altérer les preuves.',
-    requiredXp: 780,
+    requiredXp: 0,
     prerequisiteCourses: ['digital-forensics', 'soc-playbooks'],
     steps: [
       MissionStep(
