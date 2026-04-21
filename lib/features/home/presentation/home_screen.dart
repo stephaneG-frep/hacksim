@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 
 import '../../../core/state/hacksim_controller.dart';
 import '../../../core/widgets/cyber_screen.dart';
@@ -83,31 +84,41 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        Wrap(
-          spacing: 10,
-          runSpacing: 10,
-          children: [
-            _QuickAction(
-              icon: Icons.menu_book_rounded,
-              label: 'Cours',
-              onTap: () => Navigator.pushNamed(context, CoursesScreen.routeName),
-            ),
-            _QuickAction(
-              icon: Icons.security_rounded,
-              label: 'Missions',
-              onTap: () => Navigator.pushNamed(context, MissionsScreen.routeName),
-            ),
-            _QuickAction(
-              icon: Icons.show_chart_rounded,
-              label: 'Progression',
-              onTap: () => Navigator.pushNamed(context, ProgressionScreen.routeName),
-            ),
-            _QuickAction(
-              icon: Icons.person_rounded,
-              label: 'Profil',
-              onTap: () => Navigator.pushNamed(context, ProfileScreen.routeName),
-            ),
-          ],
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final rawWidth = (constraints.maxWidth - 10) / 2;
+            final tileWidth = math.max(120.0, rawWidth);
+            return Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: [
+                _QuickAction(
+                  width: tileWidth,
+                  icon: Icons.menu_book_rounded,
+                  label: 'Cours',
+                  onTap: () => Navigator.pushNamed(context, CoursesScreen.routeName),
+                ),
+                _QuickAction(
+                  width: tileWidth,
+                  icon: Icons.security_rounded,
+                  label: 'Missions',
+                  onTap: () => Navigator.pushNamed(context, MissionsScreen.routeName),
+                ),
+                _QuickAction(
+                  width: tileWidth,
+                  icon: Icons.show_chart_rounded,
+                  label: 'Progression',
+                  onTap: () => Navigator.pushNamed(context, ProgressionScreen.routeName),
+                ),
+                _QuickAction(
+                  width: tileWidth,
+                  icon: Icons.person_rounded,
+                  label: 'Profil',
+                  onTap: () => Navigator.pushNamed(context, ProfileScreen.routeName),
+                ),
+              ],
+            );
+          },
         ),
         if (!embedded) ...[
           const SizedBox(height: 12),
@@ -137,11 +148,13 @@ class HomeScreen extends StatelessWidget {
 
 class _QuickAction extends StatelessWidget {
   const _QuickAction({
+    required this.width,
     required this.icon,
     required this.label,
     required this.onTap,
   });
 
+  final double width;
   final IconData icon;
   final String label;
   final VoidCallback onTap;
@@ -149,7 +162,7 @@ class _QuickAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: (MediaQuery.of(context).size.width - 48) / 2,
+      width: width,
       child: ElevatedButton.icon(
         onPressed: onTap,
         icon: Icon(icon),

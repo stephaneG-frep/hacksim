@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 
 import '../../features/challenges/data/daily_challenges_data.dart';
 import '../../features/challenges/domain/daily_challenge_model.dart';
+import '../../features/campaigns/data/campaigns_data.dart';
+import '../../features/campaigns/domain/campaign_model.dart';
 import '../../features/courses/data/courses_data.dart';
 import '../../features/courses/domain/course_model.dart';
 import '../../features/missions/data/missions_data.dart';
@@ -35,6 +37,7 @@ class HackSimController extends ChangeNotifier {
 
   List<CourseModel> get courses => coursesData;
   List<MissionModel> get missions => missionsData;
+  List<CampaignModel> get campaigns => campaignsData;
 
   int get totalXp => _totalXp;
   int get seasonXp => _seasonXp;
@@ -103,6 +106,31 @@ class HackSimController extends ChangeNotifier {
   bool isCourseCompleted(String courseId) => _completedCourses.contains(courseId);
   bool isQuizValidated(String courseId) => _validatedQuizzes.contains(courseId);
   bool isMissionCompleted(String missionId) => _completedMissions.contains(missionId);
+  bool isCampaignStepCompleted(CampaignStep step) {
+    return switch (step.type) {
+      CampaignStepType.course => _validatedQuizzes.contains(step.targetId),
+      CampaignStepType.mission => _completedMissions.contains(step.targetId),
+    };
+  }
+
+  double campaignProgress(CampaignModel campaign) {
+    if (campaign.steps.isEmpty) {
+      return 0;
+    }
+    final completed = campaign.steps.where(isCampaignStepCompleted).length;
+    return completed / campaign.steps.length;
+  }
+
+  bool isCampaignCompleted(CampaignModel campaign) => campaignProgress(campaign) >= 1;
+
+  CampaignStep? nextCampaignStep(CampaignModel campaign) {
+    for (final step in campaign.steps) {
+      if (!isCampaignStepCompleted(step)) {
+        return step;
+      }
+    }
+    return null;
+  }
 
   double get globalProgress {
     final totalGoals = courses.length + missions.length;
@@ -272,6 +300,11 @@ class HackSimController extends ChangeNotifier {
     }
     if (_totalXp >= 1200) {
       newBadges.add('Architecte de Défense');
+    }
+    for (final campaign in campaigns) {
+      if (isCampaignCompleted(campaign)) {
+        newBadges.add(campaign.badgeName);
+      }
     }
 
     _badges

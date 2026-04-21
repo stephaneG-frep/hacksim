@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'core/state/hacksim_controller.dart';
 import 'core/theme/app_theme.dart';
+import 'features/campaigns/presentation/campaigns_screen.dart';
 import 'features/courses/presentation/course_detail_screen.dart';
 import 'features/courses/presentation/course_quiz_screen.dart';
 import 'features/challenges/presentation/daily_challenge_screen.dart';
@@ -37,6 +38,7 @@ class HackSimApp extends StatelessWidget {
                   onDone: () {},
                 ),
           routes: {
+            CampaignsScreen.routeName: (_) => CampaignsScreen(controller: controller),
             DailyChallengeScreen.routeName: (_) => DailyChallengeScreen(controller: controller),
             UserGuideScreen.routeName: (_) => const UserGuideScreen(),
             SettingsScreen.routeName: (_) => SettingsScreen(controller: controller),

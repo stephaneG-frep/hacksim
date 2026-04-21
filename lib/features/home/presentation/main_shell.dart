@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/state/hacksim_controller.dart';
+import '../../campaigns/presentation/campaigns_screen.dart';
 import '../../challenges/presentation/daily_challenge_screen.dart';
 import '../../courses/presentation/courses_screen.dart';
 import '../../help/presentation/user_guide_screen.dart';
@@ -28,6 +29,7 @@ class _MainShellState extends State<MainShell> {
       HomeScreen(controller: widget.controller, embedded: true),
       CoursesScreen(controller: widget.controller, embedded: true),
       MissionsScreen(controller: widget.controller, embedded: true),
+      CampaignsScreen(controller: widget.controller, embedded: true),
       ProgressionScreen(controller: widget.controller, embedded: true),
       ProfileScreen(controller: widget.controller, embedded: true),
       DailyChallengeScreen(controller: widget.controller, embedded: true),
@@ -39,6 +41,7 @@ class _MainShellState extends State<MainShell> {
       'HackSim',
       'Cours',
       'Missions',
+      'Campagnes',
       'Progression',
       'Profil',
       'Défi Quotidien',
@@ -124,33 +127,39 @@ class _MainShellState extends State<MainShell> {
                     ),
                     _DrawerItem(
                       icon: Icons.show_chart_rounded,
-                      label: 'Progression',
+                      label: 'Campagnes',
                       selected: _index == 3,
                       onTap: () => _goTo(3),
                     ),
                     _DrawerItem(
-                      icon: Icons.person_rounded,
-                      label: 'Profil',
+                      icon: Icons.show_chart_rounded,
+                      label: 'Progression',
                       selected: _index == 4,
                       onTap: () => _goTo(4),
                     ),
                     _DrawerItem(
-                      icon: Icons.bolt_rounded,
-                      label: 'Défi quotidien',
+                      icon: Icons.person_rounded,
+                      label: 'Profil',
                       selected: _index == 5,
                       onTap: () => _goTo(5),
                     ),
                     _DrawerItem(
-                      icon: Icons.help_center_rounded,
-                      label: 'Mode d\'emploi',
+                      icon: Icons.bolt_rounded,
+                      label: 'Défi quotidien',
                       selected: _index == 6,
                       onTap: () => _goTo(6),
                     ),
                     _DrawerItem(
-                      icon: Icons.settings_rounded,
-                      label: 'Paramètres',
+                      icon: Icons.help_center_rounded,
+                      label: 'Mode d\'emploi',
                       selected: _index == 7,
                       onTap: () => _goTo(7),
+                    ),
+                    _DrawerItem(
+                      icon: Icons.settings_rounded,
+                      label: 'Paramètres',
+                      selected: _index == 8,
+                      onTap: () => _goTo(8),
                     ),
                   ],
                 ),
