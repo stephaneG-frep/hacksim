@@ -2,9 +2,27 @@ import '../domain/daily_challenge_model.dart';
 
 const List<DailyChallengeModel> dailyChallengeTemplates = [
   DailyChallengeModel(
+    templateId: 'core-00',
+    title: 'Réflexe Défensif',
+    category: 'Fondamentaux',
+    learningFocus: 'Introduction à la cybersécurité',
+    prompt: 'Quel réflexe est toujours pertinent face à un comportement suspect ?',
+    options: [
+      'Observer, vérifier la source, puis signaler selon procédure',
+      'Exécuter immédiatement pour gagner du temps',
+      'Ignorer toutes les alertes faibles',
+      'Partager ses identifiants pour aller plus vite',
+    ],
+    correctOptionIndex: 0,
+    explanation:
+        'Le triptyque observer-vérifier-signaler est un socle de défense applicable à tous les niveaux.',
+    xpReward: 20,
+  ),
+  DailyChallengeModel(
     templateId: 'mail-01',
     title: 'Urgence Email',
     category: 'Phishing',
+    learningFocus: 'Phishing et emails frauduleux',
     prompt: 'Un email réclame un virement immédiat. Quelle première action défensive ?',
     options: [
       'Vérifier canal secondaire + identité du demandeur',
@@ -16,11 +34,13 @@ const List<DailyChallengeModel> dailyChallengeTemplates = [
     explanation:
         'La vérification hors bande réduit fortement le risque de fraude au président et d’usurpation.',
     xpReward: 25,
+    requiredQuizIds: ['phishing'],
   ),
   DailyChallengeModel(
     templateId: 'auth-02',
     title: 'Accès Compromis',
     category: 'Identité',
+    learningFocus: 'Mots de passe et authentification',
     prompt: 'Des connexions inconnues apparaissent sur un compte admin. Que faire d’abord ?',
     options: [
       'Forcer reset mot de passe + révoquer sessions + MFA',
@@ -32,11 +52,13 @@ const List<DailyChallengeModel> dailyChallengeTemplates = [
     explanation:
         'Le confinement identité est prioritaire: réinitialisation, invalidation des sessions et MFA.',
     xpReward: 30,
+    requiredQuizIds: ['password-auth'],
   ),
   DailyChallengeModel(
     templateId: 'net-03',
     title: 'Port Exposé',
     category: 'Réseaux',
+    learningFocus: 'Ports et services',
     prompt: 'Un service base de données est exposé publiquement. Meilleure décision ?',
     options: [
       'Restreindre au réseau interne et pare-feu strict',
@@ -48,11 +70,13 @@ const List<DailyChallengeModel> dailyChallengeTemplates = [
     explanation:
         'Les services sensibles doivent être isolés et strictement filtrés.',
     xpReward: 35,
+    requiredQuizIds: ['ports-services'],
   ),
   DailyChallengeModel(
     templateId: 'web-04',
     title: 'Entrées Utilisateur',
     category: 'AppSec',
+    learningFocus: 'SQL Injection Awareness',
     prompt: 'Quelle pratique réduit le risque d’injection SQL ?',
     options: [
       'Requêtes paramétrées + validation côté serveur',
@@ -64,11 +88,13 @@ const List<DailyChallengeModel> dailyChallengeTemplates = [
     explanation:
         'La paramétrisation des requêtes est le contrôle principal contre SQLi.',
     xpReward: 35,
+    requiredQuizIds: ['sqli-awareness'],
   ),
   DailyChallengeModel(
     templateId: 'xss-05',
     title: 'Sortie HTML',
     category: 'Sécurité Web',
+    learningFocus: 'XSS et sécurité web',
     prompt: 'Quel mécanisme est essentiel contre le XSS stocké ?',
     options: [
       'Encodage contextuel de la sortie',
@@ -80,11 +106,13 @@ const List<DailyChallengeModel> dailyChallengeTemplates = [
     explanation:
         'L’encodage selon le contexte d’affichage bloque l’exécution de scripts injectés.',
     xpReward: 35,
+    requiredQuizIds: ['xss-web'],
   ),
   DailyChallengeModel(
     templateId: 'ir-06',
     title: 'Réponse Incident',
     category: 'Blue Team',
+    learningFocus: 'Incident response',
     prompt: 'Pendant un incident, quel ordre est le plus juste ?',
     options: [
       'Contenir, préserver preuves, analyser, remédier',
@@ -96,11 +124,13 @@ const List<DailyChallengeModel> dailyChallengeTemplates = [
     explanation:
         'La réponse efficace suit un processus structuré et traçable.',
     xpReward: 40,
+    requiredQuizIds: ['incident-response'],
   ),
   DailyChallengeModel(
     templateId: 'logs-07',
     title: 'Signal ou Bruit',
     category: 'Détection',
+    learningFocus: 'Logs et surveillance',
     prompt: 'Quel indicateur mérite une alerte immédiate ?',
     options: [
       'Pic d’échecs MFA sur comptes sensibles',
@@ -112,5 +142,6 @@ const List<DailyChallengeModel> dailyChallengeTemplates = [
     explanation:
         'Les anomalies auth sur comptes critiques sont hautement prioritaires.',
     xpReward: 30,
+    requiredQuizIds: ['logs-monitoring'],
   ),
 ];

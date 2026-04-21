@@ -41,10 +41,15 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                 children: [
                   Chip(label: Text(challenge.category)),
                   Chip(label: Text('${challenge.xpReward} XP')),
-                  Chip(label: Text(done ? 'Déjà validé' : 'Disponible')), 
+                  Chip(label: Text(done ? 'Déjà validé' : 'Disponible')),
                 ],
               ),
               const SizedBox(height: 12),
+              Text(
+                'Aligné sur: ${challenge.learningFocus}',
+                style: const TextStyle(color: Color(0xFF65FFBF)),
+              ),
+              const SizedBox(height: 8),
               Text(challenge.prompt),
             ],
           ),

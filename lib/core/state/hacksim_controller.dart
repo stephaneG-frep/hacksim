@@ -52,11 +52,22 @@ class HackSimController extends ChangeNotifier {
   Set<String> get completedDailyChallengeIds => Set<String>.unmodifiable(_completedDailyChallenges);
   Set<String> get badges => Set<String>.unmodifiable(_badges);
 
+  List<DailyChallengeModel> get availableDailyChallenges {
+    return dailyChallengeTemplates.where((challenge) {
+      return challenge.requiredQuizIds.every(_validatedQuizzes.contains);
+    }).toList();
+  }
+
   DailyChallengeModel get todaysChallenge {
+    final eligible = availableDailyChallenges;
+    final pool = eligible.isNotEmpty
+        ? eligible
+        : dailyChallengeTemplates.where((challenge) => challenge.requiredQuizIds.isEmpty).toList();
+    final finalPool = pool.isNotEmpty ? pool : dailyChallengeTemplates;
     final now = today;
     final dayOfYear = now.difference(DateTime(now.year, 1, 1)).inDays + 1;
-    final index = dayOfYear % dailyChallengeTemplates.length;
-    return dailyChallengeTemplates[index];
+    final index = dayOfYear % finalPool.length;
+    return finalPool[index];
   }
 
   String get seasonLabel {
