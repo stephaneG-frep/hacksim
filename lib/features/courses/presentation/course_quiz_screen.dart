@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/state/hacksim_controller.dart';
+import '../../../core/providers/hacksim_provider.dart';
 import '../../../core/widgets/cyber_screen.dart';
 
-class CourseQuizScreen extends StatefulWidget {
-  const CourseQuizScreen({super.key, required this.controller, required this.courseId});
+class CourseQuizScreen extends ConsumerStatefulWidget {
+  const CourseQuizScreen({super.key, required this.courseId});
 
   static const routeName = '/course-quiz';
 
-  final HackSimController controller;
   final String courseId;
 
   @override
-  State<CourseQuizScreen> createState() => _CourseQuizScreenState();
+  ConsumerState<CourseQuizScreen> createState() => _CourseQuizScreenState();
 }
 
-class _CourseQuizScreenState extends State<CourseQuizScreen> {
+class _CourseQuizScreenState extends ConsumerState<CourseQuizScreen> {
   int _index = 0;
   int _correctAnswers = 0;
   int? _selected;
@@ -24,7 +24,7 @@ class _CourseQuizScreenState extends State<CourseQuizScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final course = widget.controller.courseById(widget.courseId);
+    final course = ref.read(hackSimControllerProvider).courseById(widget.courseId);
 
     if (_finished) {
       final score = (_correctAnswers / course.quiz.length * 100).round();
@@ -48,10 +48,11 @@ class _CourseQuizScreenState extends State<CourseQuizScreen> {
                     ElevatedButton(
                       onPressed: passed
                           ? () async {
-                              await widget.controller.validateQuiz(courseId: course.id, xpReward: course.xpReward);
-                              if (!context.mounted) {
-                                return;
-                              }
+                              await ref.read(hackSimControllerProvider).validateQuiz(
+                                    courseId: course.id,
+                                    xpReward: course.xpReward,
+                                  );
+                              if (!context.mounted) return;
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text('+${course.xpReward} XP ajoutés !')),
                               );

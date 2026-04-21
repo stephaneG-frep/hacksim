@@ -1,26 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/state/hacksim_controller.dart';
+import '../../../core/providers/hacksim_provider.dart';
 import '../../../core/widgets/cyber_screen.dart';
 import 'mission_detail_screen.dart';
 
-class MissionsScreen extends StatefulWidget {
-  const MissionsScreen({
-    super.key,
-    required this.controller,
-    this.embedded = false,
-  });
+class MissionsScreen extends ConsumerStatefulWidget {
+  const MissionsScreen({super.key, this.embedded = false});
 
   static const routeName = '/missions';
 
-  final HackSimController controller;
   final bool embedded;
 
   @override
-  State<MissionsScreen> createState() => _MissionsScreenState();
+  ConsumerState<MissionsScreen> createState() => _MissionsScreenState();
 }
 
-class _MissionsScreenState extends State<MissionsScreen> {
+class _MissionsScreenState extends ConsumerState<MissionsScreen> {
   final TextEditingController _searchController = TextEditingController();
   String? _difficultyFilter;
   bool _unlockedOnly = false;
@@ -28,7 +24,7 @@ class _MissionsScreenState extends State<MissionsScreen> {
   @override
   void initState() {
     super.initState();
-    _unlockedOnly = widget.controller.showOnlyUnlockedDefault;
+    _unlockedOnly = ref.read(hackSimControllerProvider).showOnlyUnlockedDefault;
     _searchController.addListener(() => setState(() {}));
   }
 
@@ -40,20 +36,15 @@ class _MissionsScreenState extends State<MissionsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = ref.watch(hackSimControllerProvider);
     final query = _searchController.text.trim().toLowerCase();
-    final difficulties = widget.controller.missions.map((m) => m.difficulty).toSet().toList()..sort();
+    final difficulties = controller.missions.map((m) => m.difficulty).toSet().toList()..sort();
 
-    final filtered = widget.controller.missions.where((mission) {
-      final unlocked = widget.controller.isMissionUnlocked(mission);
-      if (_unlockedOnly && !unlocked) {
-        return false;
-      }
-      if (_difficultyFilter != null && mission.difficulty != _difficultyFilter) {
-        return false;
-      }
-      if (query.isEmpty) {
-        return true;
-      }
+    final filtered = controller.missions.where((mission) {
+      final unlocked = controller.isMissionUnlocked(mission);
+      if (_unlockedOnly && !unlocked) return false;
+      if (_difficultyFilter != null && mission.difficulty != _difficultyFilter) return false;
+      if (query.isEmpty) return true;
       return mission.title.toLowerCase().contains(query) ||
           mission.category.toLowerCase().contains(query) ||
           mission.difficulty.toLowerCase().contains(query);
@@ -101,16 +92,12 @@ class _MissionsScreenState extends State<MissionsScreen> {
         ),
         ...filtered.asMap().entries.map((entry) {
           final mission = entry.value;
-          final unlocked = widget.controller.isMissionUnlocked(mission);
-          final done = widget.controller.isMissionCompleted(mission.id);
+          final unlocked = controller.isMissionUnlocked(mission);
+          final done = controller.isMissionCompleted(mission.id);
           return AnimatedCyberCard(
             order: order++,
             onTap: unlocked
-                ? () => Navigator.pushNamed(
-                      context,
-                      MissionDetailScreen.routeName,
-                      arguments: mission.id,
-                    )
+                ? () => Navigator.pushNamed(context, MissionDetailScreen.routeName, arguments: mission.id)
                 : null,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

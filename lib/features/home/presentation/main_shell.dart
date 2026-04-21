@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/state/hacksim_controller.dart';
+import '../../../core/providers/hacksim_provider.dart';
 import '../../campaigns/presentation/campaigns_screen.dart';
 import '../../challenges/presentation/daily_challenge_screen.dart';
 import '../../courses/presentation/courses_screen.dart';
@@ -11,30 +12,30 @@ import '../../progression/presentation/progression_screen.dart';
 import '../../settings/presentation/settings_screen.dart';
 import 'home_screen.dart';
 
-class MainShell extends StatefulWidget {
-  const MainShell({super.key, required this.controller});
-
-  final HackSimController controller;
+class MainShell extends ConsumerStatefulWidget {
+  const MainShell({super.key});
 
   @override
-  State<MainShell> createState() => _MainShellState();
+  ConsumerState<MainShell> createState() => _MainShellState();
 }
 
-class _MainShellState extends State<MainShell> {
+class _MainShellState extends ConsumerState<MainShell> {
   int _index = 0;
 
   @override
   Widget build(BuildContext context) {
+    final controller = ref.watch(hackSimControllerProvider);
+
     final tabs = [
-      HomeScreen(controller: widget.controller, embedded: true),
-      CoursesScreen(controller: widget.controller, embedded: true),
-      MissionsScreen(controller: widget.controller, embedded: true),
-      CampaignsScreen(controller: widget.controller, embedded: true),
-      ProgressionScreen(controller: widget.controller, embedded: true),
-      ProfileScreen(controller: widget.controller, embedded: true),
-      DailyChallengeScreen(controller: widget.controller, embedded: true),
+      const HomeScreen(embedded: true),
+      const CoursesScreen(embedded: true),
+      const MissionsScreen(embedded: true),
+      const CampaignsScreen(embedded: true),
+      const ProgressionScreen(embedded: true),
+      const ProfileScreen(embedded: true),
+      const DailyChallengeScreen(embedded: true),
       const UserGuideScreen(embedded: true),
-      SettingsScreen(controller: widget.controller, embedded: true),
+      const SettingsScreen(embedded: true),
     ];
 
     final titles = [
@@ -81,21 +82,21 @@ class _MainShellState extends State<MainShell> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
-                            widget.controller.pseudo,
+                            controller.pseudo,
                             style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 12),
-                    Text('Niveau ${widget.controller.level} • ${widget.controller.totalXp} XP'),
+                    Text('Niveau ${controller.level} • ${controller.totalXp} XP'),
                     const SizedBox(height: 10),
                     Wrap(
                       spacing: 8,
                       runSpacing: 8,
                       children: [
-                        _StatChip(label: '${widget.controller.currentDailyStreak}j streak'),
-                        _StatChip(label: '${widget.controller.seasonXp} XP saison'),
+                        _StatChip(label: '${controller.currentDailyStreak}j streak'),
+                        _StatChip(label: '${controller.seasonXp} XP saison'),
                       ],
                     ),
                   ],
@@ -169,13 +170,13 @@ class _MainShellState extends State<MainShell> {
         ),
       ),
       body: AnimatedSwitcher(
-        duration: widget.controller.animationsEnabled
+        duration: controller.animationsEnabled
             ? const Duration(milliseconds: 360)
             : Duration.zero,
         switchInCurve: Curves.easeOutCubic,
         switchOutCurve: Curves.easeInCubic,
         transitionBuilder: (child, animation) {
-          if (!widget.controller.animationsEnabled) {
+          if (!controller.animationsEnabled) {
             return child;
           }
           final slide = Tween<Offset>(begin: const Offset(0.02, 0), end: Offset.zero)

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'core/state/hacksim_controller.dart';
+import 'core/providers/hacksim_provider.dart';
 import 'core/theme/app_theme.dart';
 import 'features/campaigns/presentation/campaigns_screen.dart';
 import 'features/courses/presentation/course_detail_screen.dart';
@@ -17,65 +18,47 @@ import 'features/profile/presentation/profile_screen.dart';
 import 'features/progression/presentation/progression_screen.dart';
 import 'features/settings/presentation/settings_screen.dart';
 
-class HackSimApp extends StatelessWidget {
-  const HackSimApp({super.key, required this.controller});
-
-  final HackSimController controller;
+class HackSimApp extends ConsumerWidget {
+  const HackSimApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: controller,
-      builder: (context, _) {
-        return MaterialApp(
-          title: 'HackSim',
-          debugShowCheckedModeBanner: false,
-          theme: AppTheme.dark,
-          home: controller.onboardingSeen
-              ? MainShell(controller: controller)
-              : OnboardingScreen(
-                  controller: controller,
-                  onDone: () {},
-                ),
-          routes: {
-            CampaignsScreen.routeName: (_) => CampaignsScreen(controller: controller),
-            DailyChallengeScreen.routeName: (_) => DailyChallengeScreen(controller: controller),
-            UserGuideScreen.routeName: (_) => const UserGuideScreen(),
-            SettingsScreen.routeName: (_) => SettingsScreen(controller: controller),
-            CoursesScreen.routeName: (_) => CoursesScreen(controller: controller),
-            MissionsScreen.routeName: (_) => MissionsScreen(controller: controller),
-            ProgressionScreen.routeName: (_) => ProgressionScreen(controller: controller),
-            ProfileScreen.routeName: (_) => ProfileScreen(controller: controller),
-            '/legacy-home': (_) => HomeScreen(controller: controller),
-          },
-          onGenerateRoute: (settings) {
-            if (settings.name == CourseDetailScreen.routeName) {
-              return MaterialPageRoute<void>(
-                builder: (_) => CourseDetailScreen(
-                  controller: controller,
-                  courseId: settings.arguments! as String,
-                ),
-              );
-            }
-            if (settings.name == CourseQuizScreen.routeName) {
-              return MaterialPageRoute<void>(
-                builder: (_) => CourseQuizScreen(
-                  controller: controller,
-                  courseId: settings.arguments! as String,
-                ),
-              );
-            }
-            if (settings.name == MissionDetailScreen.routeName) {
-              return MaterialPageRoute<void>(
-                builder: (_) => MissionDetailScreen(
-                  controller: controller,
-                  missionId: settings.arguments! as String,
-                ),
-              );
-            }
-            return null;
-          },
-        );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final controller = ref.watch(hackSimControllerProvider);
+    return MaterialApp(
+      title: 'HackSim',
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.dark,
+      home: controller.onboardingSeen
+          ? const MainShell()
+          : const OnboardingScreen(),
+      routes: {
+        CampaignsScreen.routeName: (_) => const CampaignsScreen(),
+        DailyChallengeScreen.routeName: (_) => const DailyChallengeScreen(),
+        UserGuideScreen.routeName: (_) => const UserGuideScreen(),
+        SettingsScreen.routeName: (_) => const SettingsScreen(),
+        CoursesScreen.routeName: (_) => const CoursesScreen(),
+        MissionsScreen.routeName: (_) => const MissionsScreen(),
+        ProgressionScreen.routeName: (_) => const ProgressionScreen(),
+        ProfileScreen.routeName: (_) => const ProfileScreen(),
+        '/legacy-home': (_) => const HomeScreen(),
+      },
+      onGenerateRoute: (settings) {
+        if (settings.name == CourseDetailScreen.routeName) {
+          return MaterialPageRoute<void>(
+            builder: (_) => CourseDetailScreen(courseId: settings.arguments! as String),
+          );
+        }
+        if (settings.name == CourseQuizScreen.routeName) {
+          return MaterialPageRoute<void>(
+            builder: (_) => CourseQuizScreen(courseId: settings.arguments! as String),
+          );
+        }
+        if (settings.name == MissionDetailScreen.routeName) {
+          return MaterialPageRoute<void>(
+            builder: (_) => MissionDetailScreen(missionId: settings.arguments! as String),
+          );
+        }
+        return null;
       },
     );
   }

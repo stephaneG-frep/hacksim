@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/state/hacksim_controller.dart';
+import '../../../core/providers/hacksim_provider.dart';
 import '../../../core/widgets/cyber_screen.dart';
 import '../../campaigns/domain/campaign_model.dart';
 import '../../courses/presentation/course_detail_screen.dart';
 import '../../missions/presentation/mission_detail_screen.dart';
 
-class CampaignsScreen extends StatelessWidget {
-  const CampaignsScreen({
-    super.key,
-    required this.controller,
-    this.embedded = false,
-  });
+class CampaignsScreen extends ConsumerWidget {
+  const CampaignsScreen({super.key, this.embedded = false});
 
   static const routeName = '/campaigns';
 
-  final HackSimController controller;
   final bool embedded;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final controller = ref.watch(hackSimControllerProvider);
+
     final content = ListView(
       children: [
         AnimatedCyberCard(
@@ -81,9 +79,7 @@ class CampaignsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 ElevatedButton.icon(
-                  onPressed: nextStep == null
-                      ? null
-                      : () => _openStep(context, nextStep),
+                  onPressed: nextStep == null ? null : () => _openStep(context, nextStep),
                   icon: const Icon(Icons.play_arrow_rounded),
                   label: Text(nextStep == null ? 'Campagne terminée' : 'Ouvrir prochain objectif'),
                 ),
@@ -106,17 +102,9 @@ class CampaignsScreen extends StatelessWidget {
 
   void _openStep(BuildContext context, CampaignStep step) {
     if (step.type == CampaignStepType.course) {
-      Navigator.pushNamed(
-        context,
-        CourseDetailScreen.routeName,
-        arguments: step.targetId,
-      );
+      Navigator.pushNamed(context, CourseDetailScreen.routeName, arguments: step.targetId);
       return;
     }
-    Navigator.pushNamed(
-      context,
-      MissionDetailScreen.routeName,
-      arguments: step.targetId,
-    );
+    Navigator.pushNamed(context, MissionDetailScreen.routeName, arguments: step.targetId);
   }
 }

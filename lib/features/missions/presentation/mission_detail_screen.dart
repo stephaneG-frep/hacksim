@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/state/hacksim_controller.dart';
+import '../../../core/providers/hacksim_provider.dart';
 import '../../../core/widgets/cyber_screen.dart';
 
-class MissionDetailScreen extends StatefulWidget {
-  const MissionDetailScreen({super.key, required this.controller, required this.missionId});
+class MissionDetailScreen extends ConsumerStatefulWidget {
+  const MissionDetailScreen({super.key, required this.missionId});
 
   static const routeName = '/mission-detail';
 
-  final HackSimController controller;
   final String missionId;
 
   @override
-  State<MissionDetailScreen> createState() => _MissionDetailScreenState();
+  ConsumerState<MissionDetailScreen> createState() => _MissionDetailScreenState();
 }
 
-class _MissionDetailScreenState extends State<MissionDetailScreen> {
+class _MissionDetailScreenState extends ConsumerState<MissionDetailScreen> {
   int _stepIndex = 0;
   int _score = 0;
   int? _selected;
@@ -24,7 +24,7 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final mission = widget.controller.missionById(widget.missionId);
+    final mission = ref.read(hackSimControllerProvider).missionById(widget.missionId);
 
     if (_finished) {
       final ratio = _score / mission.steps.length;
@@ -54,13 +54,11 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
                     ElevatedButton(
                       onPressed: passed
                           ? () async {
-                              await widget.controller.completeMission(
-                                missionId: mission.id,
-                                xpReward: mission.xpReward,
-                              );
-                              if (!context.mounted) {
-                                return;
-                              }
+                              await ref.read(hackSimControllerProvider).completeMission(
+                                    missionId: mission.id,
+                                    xpReward: mission.xpReward,
+                                  );
+                              if (!context.mounted) return;
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text('+${mission.xpReward} XP ajoutés !')),
                               );
@@ -97,7 +95,8 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
               ),
             ),
             const SizedBox(height: 8),
-            Text('Étape ${_stepIndex + 1}/${mission.steps.length}', style: Theme.of(context).textTheme.titleMedium),
+            Text('Étape ${_stepIndex + 1}/${mission.steps.length}',
+                style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 6),
             Text(step.title),
             const SizedBox(height: 12),
@@ -123,9 +122,7 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
                             final pickedCorrect = optionIndex == step.correctOptionIndex;
                             _selected = optionIndex;
                             _revealed = true;
-                            if (pickedCorrect) {
-                              _score += 1;
-                            }
+                            if (pickedCorrect) _score += 1;
                           });
                         },
                 ),

@@ -45,36 +45,57 @@ class LocalProgressStore {
   static const _onboardingSeenKey = 'onboarding_seen';
 
   Future<LocalProgressSnapshot> load() async {
-    final prefs = await SharedPreferences.getInstance();
-    return LocalProgressSnapshot(
-      completedCourses: (prefs.getStringList(_completedCoursesKey) ?? const []).toSet(),
-      validatedQuizzes: (prefs.getStringList(_validatedQuizzesKey) ?? const []).toSet(),
-      completedMissions: (prefs.getStringList(_completedMissionsKey) ?? const []).toSet(),
-      completedDailyChallenges: (prefs.getStringList(_completedDailyChallengesKey) ?? const []).toSet(),
-      badges: (prefs.getStringList(_badgesKey) ?? const []).toSet(),
-      totalXp: prefs.getInt(_totalXpKey) ?? 0,
-      seasonXp: prefs.getInt(_seasonXpKey) ?? 0,
-      pseudo: prefs.getString(_pseudoKey) ?? 'CyberCadet',
-      animationsEnabled: prefs.getBool(_animationsEnabledKey) ?? true,
-      soundEnabled: prefs.getBool(_soundEnabledKey) ?? true,
-      showOnlyUnlockedDefault: prefs.getBool(_showOnlyUnlockedDefaultKey) ?? false,
-      onboardingSeen: prefs.getBool(_onboardingSeenKey) ?? false,
-    );
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return LocalProgressSnapshot(
+        completedCourses: (prefs.getStringList(_completedCoursesKey) ?? const []).toSet(),
+        validatedQuizzes: (prefs.getStringList(_validatedQuizzesKey) ?? const []).toSet(),
+        completedMissions: (prefs.getStringList(_completedMissionsKey) ?? const []).toSet(),
+        completedDailyChallenges: (prefs.getStringList(_completedDailyChallengesKey) ?? const []).toSet(),
+        badges: (prefs.getStringList(_badgesKey) ?? const []).toSet(),
+        totalXp: prefs.getInt(_totalXpKey) ?? 0,
+        seasonXp: prefs.getInt(_seasonXpKey) ?? 0,
+        pseudo: prefs.getString(_pseudoKey) ?? 'CyberCadet',
+        animationsEnabled: prefs.getBool(_animationsEnabledKey) ?? true,
+        soundEnabled: prefs.getBool(_soundEnabledKey) ?? true,
+        showOnlyUnlockedDefault: prefs.getBool(_showOnlyUnlockedDefaultKey) ?? false,
+        onboardingSeen: prefs.getBool(_onboardingSeenKey) ?? false,
+      );
+    } catch (_) {
+      return const LocalProgressSnapshot(
+        completedCourses: {},
+        validatedQuizzes: {},
+        completedMissions: {},
+        completedDailyChallenges: {},
+        badges: {},
+        totalXp: 0,
+        seasonXp: 0,
+        pseudo: 'CyberCadet',
+        animationsEnabled: true,
+        soundEnabled: true,
+        showOnlyUnlockedDefault: false,
+        onboardingSeen: false,
+      );
+    }
   }
 
   Future<void> save(LocalProgressSnapshot snapshot) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList(_completedCoursesKey, snapshot.completedCourses.toList()..sort());
-    await prefs.setStringList(_validatedQuizzesKey, snapshot.validatedQuizzes.toList()..sort());
-    await prefs.setStringList(_completedMissionsKey, snapshot.completedMissions.toList()..sort());
-    await prefs.setStringList(_completedDailyChallengesKey, snapshot.completedDailyChallenges.toList()..sort());
-    await prefs.setStringList(_badgesKey, snapshot.badges.toList()..sort());
-    await prefs.setInt(_totalXpKey, snapshot.totalXp);
-    await prefs.setInt(_seasonXpKey, snapshot.seasonXp);
-    await prefs.setString(_pseudoKey, snapshot.pseudo);
-    await prefs.setBool(_animationsEnabledKey, snapshot.animationsEnabled);
-    await prefs.setBool(_soundEnabledKey, snapshot.soundEnabled);
-    await prefs.setBool(_showOnlyUnlockedDefaultKey, snapshot.showOnlyUnlockedDefault);
-    await prefs.setBool(_onboardingSeenKey, snapshot.onboardingSeen);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setStringList(_completedCoursesKey, snapshot.completedCourses.toList()..sort());
+      await prefs.setStringList(_validatedQuizzesKey, snapshot.validatedQuizzes.toList()..sort());
+      await prefs.setStringList(_completedMissionsKey, snapshot.completedMissions.toList()..sort());
+      await prefs.setStringList(_completedDailyChallengesKey, snapshot.completedDailyChallenges.toList()..sort());
+      await prefs.setStringList(_badgesKey, snapshot.badges.toList()..sort());
+      await prefs.setInt(_totalXpKey, snapshot.totalXp);
+      await prefs.setInt(_seasonXpKey, snapshot.seasonXp);
+      await prefs.setString(_pseudoKey, snapshot.pseudo);
+      await prefs.setBool(_animationsEnabledKey, snapshot.animationsEnabled);
+      await prefs.setBool(_soundEnabledKey, snapshot.soundEnabled);
+      await prefs.setBool(_showOnlyUnlockedDefaultKey, snapshot.showOnlyUnlockedDefault);
+      await prefs.setBool(_onboardingSeenKey, snapshot.onboardingSeen);
+    } catch (_) {
+      // Échec non-critique : la progression sera retentée au prochain appel.
+    }
   }
 }

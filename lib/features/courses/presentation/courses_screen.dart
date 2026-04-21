@@ -1,27 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/state/hacksim_controller.dart';
+import '../../../core/providers/hacksim_provider.dart';
 import '../../../core/widgets/cyber_screen.dart';
 import '../domain/course_model.dart';
 import 'course_detail_screen.dart';
 
-class CoursesScreen extends StatefulWidget {
-  const CoursesScreen({
-    super.key,
-    required this.controller,
-    this.embedded = false,
-  });
+class CoursesScreen extends ConsumerStatefulWidget {
+  const CoursesScreen({super.key, this.embedded = false});
 
   static const routeName = '/courses';
 
-  final HackSimController controller;
   final bool embedded;
 
   @override
-  State<CoursesScreen> createState() => _CoursesScreenState();
+  ConsumerState<CoursesScreen> createState() => _CoursesScreenState();
 }
 
-class _CoursesScreenState extends State<CoursesScreen> {
+class _CoursesScreenState extends ConsumerState<CoursesScreen> {
   final TextEditingController _searchController = TextEditingController();
   CourseLevel? _levelFilter;
   bool _unlockedOnly = false;
@@ -29,7 +25,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
   @override
   void initState() {
     super.initState();
-    _unlockedOnly = widget.controller.showOnlyUnlockedDefault;
+    _unlockedOnly = ref.read(hackSimControllerProvider).showOnlyUnlockedDefault;
     _searchController.addListener(() => setState(() {}));
   }
 
@@ -41,19 +37,14 @@ class _CoursesScreenState extends State<CoursesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = ref.watch(hackSimControllerProvider);
     final query = _searchController.text.trim().toLowerCase();
 
-    final filtered = widget.controller.courses.where((course) {
-      final unlocked = widget.controller.isCourseUnlocked(course);
-      if (_unlockedOnly && !unlocked) {
-        return false;
-      }
-      if (_levelFilter != null && course.level != _levelFilter) {
-        return false;
-      }
-      if (query.isEmpty) {
-        return true;
-      }
+    final filtered = controller.courses.where((course) {
+      final unlocked = controller.isCourseUnlocked(course);
+      if (_unlockedOnly && !unlocked) return false;
+      if (_levelFilter != null && course.level != _levelFilter) return false;
+      if (query.isEmpty) return true;
       return course.title.toLowerCase().contains(query) ||
           course.category.toLowerCase().contains(query) ||
           course.level.label.toLowerCase().contains(query);
@@ -110,16 +101,12 @@ class _CoursesScreenState extends State<CoursesScreen> {
             Text(level.label, style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 8),
             ...grouped[level]!.map((course) {
-              final unlocked = widget.controller.isCourseUnlocked(course);
-              final validated = widget.controller.isQuizValidated(course.id);
+              final unlocked = controller.isCourseUnlocked(course);
+              final validated = controller.isQuizValidated(course.id);
               return AnimatedCyberCard(
                 order: order++,
                 onTap: unlocked
-                    ? () => Navigator.pushNamed(
-                          context,
-                          CourseDetailScreen.routeName,
-                          arguments: course.id,
-                        )
+                    ? () => Navigator.pushNamed(context, CourseDetailScreen.routeName, arguments: course.id)
                     : null,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

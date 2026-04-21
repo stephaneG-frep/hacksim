@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/state/hacksim_controller.dart';
+import '../../../core/providers/hacksim_provider.dart';
 import '../../../core/widgets/cyber_screen.dart';
 
-class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({super.key, required this.controller, required this.onDone});
-
-  final HackSimController controller;
-  final VoidCallback onDone;
+class OnboardingScreen extends ConsumerStatefulWidget {
+  const OnboardingScreen({super.key});
 
   @override
-  State<OnboardingScreen> createState() => _OnboardingScreenState();
+  ConsumerState<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
+class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _index = 0;
 
@@ -115,8 +113,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         );
                         return;
                       }
-                      await widget.controller.markOnboardingSeen();
-                      widget.onDone();
+                      await ref.read(hackSimControllerProvider).markOnboardingSeen();
                     },
                     child: Text(_index == _pages.length - 1 ? 'Commencer' : 'Suivant'),
                   ),

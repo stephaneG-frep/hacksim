@@ -1,31 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/state/hacksim_controller.dart';
+import '../../../core/providers/hacksim_provider.dart';
 import '../../../core/widgets/cyber_screen.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({
-    super.key,
-    required this.controller,
-    this.embedded = false,
-  });
+class ProfileScreen extends ConsumerStatefulWidget {
+  const ProfileScreen({super.key, this.embedded = false});
 
   static const routeName = '/profile';
 
-  final HackSimController controller;
   final bool embedded;
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   late final TextEditingController _pseudoController;
 
   @override
   void initState() {
     super.initState();
-    _pseudoController = TextEditingController(text: widget.controller.pseudo);
+    _pseudoController = TextEditingController(
+      text: ref.read(hackSimControllerProvider).pseudo,
+    );
   }
 
   @override
@@ -36,7 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final controller = widget.controller;
+    final controller = ref.watch(hackSimControllerProvider);
 
     final content = ListView(
       children: [
@@ -47,10 +45,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         const SizedBox(height: 10),
         ElevatedButton(
           onPressed: () async {
-            await controller.updatePseudo(_pseudoController.text);
-            if (!context.mounted) {
-              return;
-            }
+            await ref.read(hackSimControllerProvider).updatePseudo(_pseudoController.text);
+            if (!context.mounted) return;
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Pseudo mis à jour.')));
           },
           child: const Text('Enregistrer'),
@@ -58,10 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         const SizedBox(height: 16),
         AnimatedCyberCard(
           order: 0,
-          child: ListTile(
-            title: const Text('XP totale'),
-            trailing: Text('${controller.totalXp} XP'),
-          ),
+          child: ListTile(title: const Text('XP totale'), trailing: Text('${controller.totalXp} XP')),
         ),
         AnimatedCyberCard(
           order: 1,
@@ -73,10 +66,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         AnimatedCyberCard(
           order: 2,
-          child: ListTile(
-            title: const Text('Niveau'),
-            trailing: Text('Niv. ${controller.level}'),
-          ),
+          child: ListTile(title: const Text('Niveau'), trailing: Text('Niv. ${controller.level}')),
         ),
         AnimatedCyberCard(
           order: 3,

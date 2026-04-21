@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/state/hacksim_controller.dart';
+import '../../../core/providers/hacksim_provider.dart';
 import '../../../core/widgets/cyber_screen.dart';
 
-class ProgressionScreen extends StatelessWidget {
-  const ProgressionScreen({
-    super.key,
-    required this.controller,
-    this.embedded = false,
-  });
+class ProgressionScreen extends ConsumerWidget {
+  const ProgressionScreen({super.key, this.embedded = false});
 
   static const routeName = '/progression';
 
-  final HackSimController controller;
   final bool embedded;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final controller = ref.watch(hackSimControllerProvider);
     final totalCourses = controller.courses.length;
     final totalMissions = controller.missions.length;
 

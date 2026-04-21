@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/state/hacksim_controller.dart';
+import '../../../core/providers/hacksim_provider.dart';
 import '../../../core/widgets/cyber_screen.dart';
 import 'course_quiz_screen.dart';
 
-class CourseDetailScreen extends StatelessWidget {
-  const CourseDetailScreen({super.key, required this.controller, required this.courseId});
+class CourseDetailScreen extends ConsumerWidget {
+  const CourseDetailScreen({super.key, required this.courseId});
 
   static const routeName = '/course-detail';
 
-  final HackSimController controller;
   final String courseId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final controller = ref.watch(hackSimControllerProvider);
     final course = controller.courseById(courseId);
 
     return Scaffold(
@@ -54,7 +55,7 @@ class CourseDetailScreen extends StatelessWidget {
             const SizedBox(height: 12),
             ElevatedButton.icon(
               onPressed: () {
-                controller.markCourseStarted(course.id);
+                ref.read(hackSimControllerProvider).markCourseStarted(course.id);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Cours marqué comme démarré.')),
                 );

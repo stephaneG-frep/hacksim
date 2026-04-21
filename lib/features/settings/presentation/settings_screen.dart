@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/state/hacksim_controller.dart';
+import '../../../core/providers/hacksim_provider.dart';
 import '../../../core/widgets/cyber_screen.dart';
 
-class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key, required this.controller, this.embedded = false});
+class SettingsScreen extends ConsumerWidget {
+  const SettingsScreen({super.key, this.embedded = false});
 
   static const routeName = '/settings';
 
-  final HackSimController controller;
   final bool embedded;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final controller = ref.watch(hackSimControllerProvider);
+
     final content = ListView(
       children: [
         AnimatedCyberCard(
           order: 0,
           child: SwitchListTile(
             value: controller.animationsEnabled,
-            onChanged: (v) => controller.setAnimationsEnabled(v),
+            onChanged: (v) => ref.read(hackSimControllerProvider).setAnimationsEnabled(v),
             title: const Text('Animations UI'),
             subtitle: const Text('Activer les transitions et animations visuelles'),
           ),
@@ -28,7 +30,7 @@ class SettingsScreen extends StatelessWidget {
           order: 1,
           child: SwitchListTile(
             value: controller.soundEnabled,
-            onChanged: (v) => controller.setSoundEnabled(v),
+            onChanged: (v) => ref.read(hackSimControllerProvider).setSoundEnabled(v),
             title: const Text('Feedback sonore (préférence)'),
             subtitle: const Text('Prépare les futurs sons de validation et alertes'),
           ),
@@ -37,8 +39,8 @@ class SettingsScreen extends StatelessWidget {
           order: 2,
           child: SwitchListTile(
             value: controller.showOnlyUnlockedDefault,
-            onChanged: (v) => controller.setShowOnlyUnlockedDefault(v),
-            title: const Text('Filtrer sur “déverrouillé” par défaut'),
+            onChanged: (v) => ref.read(hackSimControllerProvider).setShowOnlyUnlockedDefault(v),
+            title: const Text('Filtrer sur "déverrouillé" par défaut'),
             subtitle: const Text('Appliqué aux listes cours et missions'),
           ),
         ),
@@ -59,18 +61,20 @@ class SettingsScreen extends StatelessWidget {
                         'Cette action supprime la progression locale (XP, badges, quiz et missions validés).',
                       ),
                       actions: [
-                        TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Annuler')),
-                        ElevatedButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Réinitialiser')),
+                        TextButton(
+                          onPressed: () => Navigator.pop(ctx, false),
+                          child: const Text('Annuler'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => Navigator.pop(ctx, true),
+                          child: const Text('Réinitialiser'),
+                        ),
                       ],
                     ),
                   );
-                  if (confirmed != true) {
-                    return;
-                  }
-                  await controller.resetProgress();
-                  if (!context.mounted) {
-                    return;
-                  }
+                  if (confirmed != true) return;
+                  await ref.read(hackSimControllerProvider).resetProgress();
+                  if (!context.mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Progression réinitialisée.')),
                   );

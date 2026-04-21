@@ -1,29 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/state/hacksim_controller.dart';
+import '../../../core/providers/hacksim_provider.dart';
 import '../../../core/widgets/cyber_screen.dart';
 
-class DailyChallengeScreen extends StatefulWidget {
-  const DailyChallengeScreen({super.key, required this.controller, this.embedded = false});
+class DailyChallengeScreen extends ConsumerStatefulWidget {
+  const DailyChallengeScreen({super.key, this.embedded = false});
 
   static const routeName = '/daily-challenge';
 
-  final HackSimController controller;
   final bool embedded;
 
   @override
-  State<DailyChallengeScreen> createState() => _DailyChallengeScreenState();
+  ConsumerState<DailyChallengeScreen> createState() => _DailyChallengeScreenState();
 }
 
-class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
+class _DailyChallengeScreenState extends ConsumerState<DailyChallengeScreen> {
   int? _selected;
   bool _revealed = false;
 
   @override
   Widget build(BuildContext context) {
-    final challenge = widget.controller.todaysChallenge;
-    final challengeId = challenge.idForDate(widget.controller.today);
-    final done = widget.controller.isDailyChallengeCompleted(challengeId);
+    final controller = ref.watch(hackSimControllerProvider);
+    final challenge = controller.todaysChallenge;
+    final challengeId = challenge.idForDate(controller.today);
+    final done = controller.isDailyChallengeCompleted(challengeId);
     final isCorrect = _selected == challenge.correctOptionIndex;
 
     final content = ListView(
@@ -92,10 +93,8 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                       ? null
                       : isCorrect
                           ? () async {
-                              await widget.controller.completeDailyChallenge();
-                              if (!context.mounted) {
-                                return;
-                              }
+                              await ref.read(hackSimControllerProvider).completeDailyChallenge();
+                              if (!context.mounted) return;
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text('+${challenge.xpReward} XP défi quotidien !')),
                               );

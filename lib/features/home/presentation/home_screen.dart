@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-import '../../../core/state/hacksim_controller.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../core/providers/hacksim_provider.dart';
 import '../../../core/widgets/cyber_screen.dart';
 import '../../challenges/presentation/daily_challenge_screen.dart';
 import '../../courses/presentation/courses_screen.dart';
@@ -9,18 +11,14 @@ import '../../missions/presentation/missions_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
 import '../../progression/presentation/progression_screen.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({
-    super.key,
-    required this.controller,
-    this.embedded = false,
-  });
+class HomeScreen extends ConsumerWidget {
+  const HomeScreen({super.key, this.embedded = false});
 
-  final HackSimController controller;
   final bool embedded;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final controller = ref.watch(hackSimControllerProvider);
     final challenge = controller.todaysChallenge;
     final challengeDone = controller.isDailyChallengeCompleted(
       challenge.idForDate(controller.today),
@@ -55,7 +53,7 @@ class HomeScreen extends StatelessWidget {
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute<void>(
-                builder: (_) => DailyChallengeScreen(controller: controller),
+                builder: (_) => const DailyChallengeScreen(),
               ),
             );
           },
@@ -147,12 +145,7 @@ class HomeScreen extends StatelessWidget {
 }
 
 class _QuickAction extends StatelessWidget {
-  const _QuickAction({
-    required this.width,
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
+  const _QuickAction({required this.width, required this.icon, required this.label, required this.onTap});
 
   final double width;
   final IconData icon;
@@ -163,11 +156,7 @@ class _QuickAction extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: width,
-      child: ElevatedButton.icon(
-        onPressed: onTap,
-        icon: Icon(icon),
-        label: Text(label),
-      ),
+      child: ElevatedButton.icon(onPressed: onTap, icon: Icon(icon), label: Text(label)),
     );
   }
 }
@@ -207,7 +196,7 @@ class _AboutScreen extends StatelessWidget {
         child: Text(
           'HackSim est une application éducative de cybersécurité. '
           'Tous les scénarios sont simulés et conçus pour apprendre des pratiques défensives.\n\n'
-          'Aucune fonctionnalité offensive réelle n’est proposée.',
+          "Aucune fonctionnalité offensive réelle n'est proposée.",
         ),
       ),
     );
