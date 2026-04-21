@@ -353,4 +353,298 @@ const List<MissionModel> missionsData = [
       ),
     ],
   ),
+  MissionModel(
+    id: 'mobile-lockdown',
+    title: 'Mobile Lockdown',
+    difficulty: 'Moyen',
+    category: 'Poste utilisateur',
+    xpReward: 115,
+    scenario:
+        'Un smartphone professionnel est perdu. Tu dois sécuriser l’accès aux données et limiter l’exposition.',
+    requiredXp: 220,
+    prerequisiteCourses: ['mobile-security-basics'],
+    steps: [
+      MissionStep(
+        title: 'Étape 1 - Première réponse',
+        prompt: 'Quelle action est prioritaire ?',
+        options: [
+          'Déclencher verrouillage/effacement à distance via MDM',
+          'Attendre un retour utilisateur',
+          'Désactiver tous les comptes de toute l’entreprise',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'Le contrôle à distance est la meilleure réponse immédiate pour protéger les données mobiles.',
+      ),
+      MissionStep(
+        title: 'Étape 2 - Compte associé',
+        prompt: 'Que faire sur le compte de l’utilisateur ?',
+        options: [
+          'Révoquer sessions actives et forcer MFA/rotation',
+          'Laisser les sessions ouvertes pour surveillance',
+          'Partager un mot de passe temporaire générique',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'La révocation de session réduit rapidement le risque d’accès frauduleux.',
+      ),
+      MissionStep(
+        title: 'Étape 3 - Prévention',
+        prompt: 'Quel contrôle évite ce type d’incident à l’avenir ?',
+        options: [
+          'Politique MDM + chiffrement + conformité appareils',
+          'Interdire les mises à jour système',
+          'Supprimer le verrouillage biométrique',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'Une politique mobile complète combine chiffrement, conformité et contrôle centralisé.',
+      ),
+    ],
+  ),
+  MissionModel(
+    id: 'backup-recovery-drill',
+    title: 'Backup Recovery Drill',
+    difficulty: 'Moyen',
+    category: 'Résilience',
+    xpReward: 125,
+    scenario:
+        'Après un incident simulé, plusieurs fichiers critiques sont indisponibles. Ta mission: restaurer de façon fiable.',
+    requiredXp: 260,
+    prerequisiteCourses: ['backup-recovery'],
+    steps: [
+      MissionStep(
+        title: 'Étape 1 - Source de restauration',
+        prompt: 'Quelle sauvegarde choisir en premier ?',
+        options: [
+          'Sauvegarde validée la plus récente avec test d’intégrité',
+          'Copie locale non vérifiée',
+          'Archive ancienne sans métadonnées',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'La restauration doit s’appuyer sur une source vérifiée pour éviter corruption ou perte.',
+      ),
+      MissionStep(
+        title: 'Étape 2 - Ordre de reprise',
+        prompt: 'Quel ordre est recommandé ?',
+        options: [
+          'Restaurer services critiques puis données secondaires',
+          'Restaurer au hasard pour aller vite',
+          'Recréer les données manuellement sans sauvegarde',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'La priorisation par criticité réduit l’impact métier.',
+      ),
+      MissionStep(
+        title: 'Étape 3 - Amélioration continue',
+        prompt: 'Quelle action clôture correctement l’exercice ?',
+        options: [
+          'Rédiger un retour d’expérience et ajuster RTO/RPO',
+          'Supprimer les logs d’exercice',
+          'Ne rien documenter car c’est un test',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'La documentation post-exercice est indispensable pour améliorer la résilience.',
+      ),
+    ],
+  ),
+  MissionModel(
+    id: 'iam-audit-rush',
+    title: 'IAM Audit Rush',
+    difficulty: 'Difficile',
+    category: 'Identité',
+    xpReward: 145,
+    scenario:
+        'Un audit révèle des privilèges excessifs. Tu dois corriger les accès sans casser la production simulée.',
+    requiredXp: 400,
+    prerequisiteCourses: ['iam-basics'],
+    steps: [
+      MissionStep(
+        title: 'Étape 1 - Priorité',
+        prompt: 'Quelle catégorie d’accès traiter d’abord ?',
+        options: [
+          'Comptes admin permanents non justifiés',
+          'Comptes invités expirés déjà inactifs',
+          'Comptes de test supprimés',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'Les privilèges élevés non contrôlés représentent le risque le plus immédiat.',
+      ),
+      MissionStep(
+        title: 'Étape 2 - Mesure',
+        prompt: 'Quel mécanisme réduit le risque tout en gardant l’opérationnel ?',
+        options: [
+          'Accès just-in-time avec validation et expiration',
+          'Rendre tout le monde admin temporairement',
+          'Désactiver les journaux IAM',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'Le modèle JIT réduit la durée d’exposition des privilèges sensibles.',
+      ),
+      MissionStep(
+        title: 'Étape 3 - Contrôle durable',
+        prompt: 'Que mettre en place ensuite ?',
+        options: [
+          'Revue périodique des droits et alertes sur élévation',
+          'Aucune revue car le nettoyage est fait',
+          'Partage de comptes pour simplifier',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'La gouvernance IAM doit être continue, pas ponctuelle.',
+      ),
+    ],
+  ),
+  MissionModel(
+    id: 'cloud-guardrails',
+    title: 'Cloud Guardrails',
+    difficulty: 'Difficile',
+    category: 'Cloud',
+    xpReward: 160,
+    scenario:
+        'Une configuration cloud simulée expose des ressources critiques. Tu dois appliquer des garde-fous.',
+    requiredXp: 500,
+    prerequisiteCourses: ['cloud-security-fundamentals'],
+    steps: [
+      MissionStep(
+        title: 'Étape 1 - Diagnostic',
+        prompt: 'Quel risque corriger en priorité ?',
+        options: [
+          'Stockage sensible accessible publiquement',
+          'Tag de ressource manquant',
+          'Nommage non homogène',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'L’exposition publique de données sensibles doit être traitée immédiatement.',
+      ),
+      MissionStep(
+        title: 'Étape 2 - Garde-fou technique',
+        prompt: 'Quel contrôle automatique mettre en place ?',
+        options: [
+          'Policy bloquant toute ressource publique non approuvée',
+          'Script manuel exécuté une fois par an',
+          'Suppression de la journalisation cloud',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'Les policy-as-code empêchent les dérives de configuration avant mise en prod.',
+      ),
+      MissionStep(
+        title: 'Étape 3 - Vérification',
+        prompt: 'Comment valider durablement la conformité ?',
+        options: [
+          'Scanner en continu et alerter sur dérive',
+          'Contrôler uniquement après incident',
+          'Désactiver les alertes pour réduire le bruit',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'La conformité cloud nécessite un contrôle continu et une boucle d’alerte.',
+      ),
+    ],
+  ),
+  MissionModel(
+    id: 'api-shield',
+    title: 'API Shield',
+    difficulty: 'Expert',
+    category: 'Sécurité applicative',
+    xpReward: 175,
+    scenario:
+        'Une API métier reçoit un trafic anormal. Tu dois renforcer l’authentification et limiter les abus.',
+    requiredXp: 640,
+    prerequisiteCourses: ['api-security-essentials'],
+    steps: [
+      MissionStep(
+        title: 'Étape 1 - Authentification',
+        prompt: 'Quel contrôle est prioritaire ?',
+        options: [
+          'Vérification stricte des tokens + scopes minimaux',
+          'Autoriser tokens expirés en fallback',
+          'Désactiver toute auth pour debug',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'Le contrôle de validité et de périmètre des tokens protège les endpoints sensibles.',
+      ),
+      MissionStep(
+        title: 'Étape 2 - Limitation d’abus',
+        prompt: 'Quelle mesure limite efficacement les tentatives automatiques ?',
+        options: [
+          'Rate limiting + quotas par client',
+          'Retirer les logs d’accès',
+          'Augmenter timeout sans filtrage',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'Le rate limiting réduit les attaques par volume et protège la disponibilité.',
+      ),
+      MissionStep(
+        title: 'Étape 3 - Détection',
+        prompt: 'Quel signal suivre en priorité ?',
+        options: [
+          'Hausse d’erreurs auth et pics sur endpoints sensibles',
+          'Nombre de couleurs CSS chargées',
+          'Temps de compilation local développeur',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'Les anomalies auth/usage endpoint sont des indicateurs utiles d’abus API.',
+      ),
+    ],
+  ),
+  MissionModel(
+    id: 'forensics-war-room',
+    title: 'Forensics War Room',
+    difficulty: 'Expert',
+    category: 'Investigation',
+    xpReward: 210,
+    scenario:
+        'Une intrusion simulée est suspectée. Tu dois piloter la collecte et l’analyse forensique sans altérer les preuves.',
+    requiredXp: 780,
+    prerequisiteCourses: ['digital-forensics', 'soc-playbooks'],
+    steps: [
+      MissionStep(
+        title: 'Étape 1 - Préservation',
+        prompt: 'Quelle action respecte la chaîne de conservation ?',
+        options: [
+          'Acquisition image disque/mémoire avant remédiation intrusive',
+          'Suppression immédiate des fichiers suspects',
+          'Redémarrage complet de tous les serveurs',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'La préservation correcte des preuves est indispensable pour une analyse fiable.',
+      ),
+      MissionStep(
+        title: 'Étape 2 - Corrélation',
+        prompt: 'Quel jeu de données corréler ?',
+        options: [
+          'Logs auth, netflow et événements endpoint horodatés',
+          'Documents marketing et assets graphiques',
+          'Historique des thèmes IDE',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'La corrélation multi-source permet de reconstruire la chronologie d’attaque.',
+      ),
+      MissionStep(
+        title: 'Étape 3 - Restitution',
+        prompt: 'Quel livrable final est le plus utile ?',
+        options: [
+          'Rapport chronologique avec impacts, preuves et recommandations',
+          'Résumé sans preuves pour aller vite',
+          'Aucune restitution écrite',
+        ],
+        correctOptionIndex: 0,
+        explanation:
+            'Un rapport structuré facilite la décision et la prévention future.',
+      ),
+    ],
+  ),
 ];

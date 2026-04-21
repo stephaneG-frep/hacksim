@@ -90,10 +90,7 @@ class HackSimController extends ChangeNotifier {
   MissionModel missionById(String id) => missions.firstWhere((mission) => mission.id == id);
 
   bool isCourseUnlocked(CourseModel course) {
-    if (course.prerequisites.isEmpty) {
-      return true;
-    }
-    return course.prerequisites.every(_validatedQuizzes.contains);
+    return true;
   }
 
   bool isMissionUnlocked(MissionModel mission) {
