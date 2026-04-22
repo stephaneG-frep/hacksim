@@ -1,1 +1,240 @@
-[]
+[
+  {
+    "templateId": "wifi-08",
+    "title": "WiFi Public",
+    "category": "Reseaux",
+    "learningFocus": "WiFi et securite sans fil",
+    "prompt": "Tu dois te connecter depuis un cafe. Quelle pratique est la plus sure ?",
+    "options": [
+      "Utiliser le VPN entreprise sur le WiFi public",
+      "Se connecter sans VPN car le WiFi est gratuit",
+      "Desactiver le pare-feu pour plus de rapidite",
+      "Partager le mot de passe du hotspot dans le chat"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Le VPN chiffre le tunnel et protege les donnees meme sur un reseau non maitrise.",
+    "xpReward": 25,
+    "requiredQuizIds": ["wifi-security"]
+  },
+  {
+    "templateId": "vpn-09",
+    "title": "Teletravail Securise",
+    "category": "Hygiene numerique",
+    "learningFocus": "VPN et travail distant securise",
+    "prompt": "Un collaborateur en teletravail signale un acces lent. Quelle recommandation est correcte ?",
+    "options": [
+      "Verifier que le VPN est actif et le poste a jour avant tout",
+      "Desactiver le VPN pour gagner de la bande passante",
+      "Partager les credentials VPN avec un collegue",
+      "Autoriser toutes les connexions entrantes sur le pare-feu local"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "La performance ne justifie pas d'exposer les acces. Le VPN et le patch doivent rester prioritaires.",
+    "xpReward": 25,
+    "requiredQuizIds": ["vpn-remote-work"]
+  },
+  {
+    "templateId": "osint-10",
+    "title": "Empreinte Numerique",
+    "category": "Reconnaissance",
+    "learningFocus": "OSINT defensif",
+    "prompt": "Quel element reduit efficacement la surface de reconnaissance adverse ?",
+    "options": [
+      "Auditer et nettoyer les informations publiques sur les domaines et employes",
+      "Publier l'organigramme complet sur le site web",
+      "Laisser les anciennes adresses email actives indefiniment",
+      "Afficher les versions exactes des serveurs dans les en-tetes HTTP"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Reduire l'empreinte OSINT complique la phase de reconnaissance d'un attaquant.",
+    "xpReward": 30,
+    "requiredQuizIds": ["osint-defensive"]
+  },
+  {
+    "templateId": "vuln-11",
+    "title": "Patch Priority",
+    "category": "Detection",
+    "learningFocus": "Gestion des vulnerabilites",
+    "prompt": "Comment prioriser les CVE dans un parc heterogene ?",
+    "options": [
+      "Score CVSS critique + service expose + actif sensible = priorite maximale",
+      "Patcher toutes les CVE dans l'ordre alphabetique",
+      "Ignorer les CVE anciennes de plus de 6 mois",
+      "Appliquer les patchs uniquement apres un incident"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "La criticite combinee au contexte d'exposition determine la priorite reelle.",
+    "xpReward": 30,
+    "requiredQuizIds": ["vuln-management"]
+  },
+  {
+    "templateId": "ransom-12",
+    "title": "Ransomware Signal",
+    "category": "Resilience",
+    "learningFocus": "Ransomware : prevention et reponse",
+    "prompt": "Quel signe precurseur d'un ransomware doit declencher une alerte immediate ?",
+    "options": [
+      "Chiffrement massif de fichiers et communication C2 suspecte",
+      "Un utilisateur change son fond d'ecran",
+      "Une mise a jour systeme planifiee",
+      "Un acces normal au partage reseau"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Le chiffrement en masse et les communications C2 sont des indicateurs critiques de ransomware en cours.",
+    "xpReward": 35,
+    "requiredQuizIds": ["ransomware-response"]
+  },
+  {
+    "templateId": "supply-13",
+    "title": "Dependance Malveillante",
+    "category": "DevSecOps",
+    "learningFocus": "Securite de la chaine logicielle",
+    "prompt": "Un paquet NPM populaire est compromis. Quelle reaction est correcte ?",
+    "options": [
+      "Epingler la version saine, scanner le build et auditer les artefacts deployes",
+      "Continuer a utiliser le paquet en esperant que l'impact soit faible",
+      "Supprimer uniquement le paquet sans verifier les artefacts deja deployes",
+      "Attendre un patch officiel sans aucune mesure conservatoire"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "La reponse supply chain combine isolation de version, scan et verification des deploiements existants.",
+    "xpReward": 35,
+    "requiredQuizIds": ["supply-chain-security"]
+  },
+  {
+    "templateId": "mob-14",
+    "title": "Application Mobile Suspecte",
+    "category": "Poste utilisateur",
+    "learningFocus": "Securite mobile essentielle",
+    "prompt": "Un employe a installe une APK hors store. Quelle mesure prendre ?",
+    "options": [
+      "Isoler le terminal, revoquer les sessions associees, analyser l'APK",
+      "Laisser le terminal en production et surveiller passivement",
+      "Reinstaller uniquement le store officiel sans investigation",
+      "Ignorer si aucune alerte SIEM n'est remontee"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Une APK non verifiee est un vecteur de compromission: isolement et analyse sont prioritaires.",
+    "xpReward": 25,
+    "requiredQuizIds": ["mobile-security-basics"]
+  },
+  {
+    "templateId": "back-15",
+    "title": "Backup Corrompu",
+    "category": "Resilience",
+    "learningFocus": "Sauvegardes et restauration",
+    "prompt": "La derniere sauvegarde echoue a la verification d'integrite. Que faire ?",
+    "options": [
+      "Utiliser la sauvegarde valide precedente et corriger le processus de backup",
+      "Restaurer quand meme la sauvegarde corrompue",
+      "Supprimer toutes les sauvegardes et repartir de zero",
+      "Ignorer l'echec car la sauvegarde existe physiquement"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Une sauvegarde corrompue est inutilisable. Il faut remonter a la derniere version valide et corriger le processus.",
+    "xpReward": 25,
+    "requiredQuizIds": ["backup-recovery"]
+  },
+  {
+    "templateId": "bf-16",
+    "title": "Brute Force Detecte",
+    "category": "Defense identite",
+    "learningFocus": "Brute force et defense",
+    "prompt": "500 tentatives de connexion en 2 minutes sur un compte admin. Reaction ?",
+    "options": [
+      "Bloquer l'IP source, verrouiller le compte temporairement, alerter le SOC",
+      "Attendre que l'attaque s'arrete naturellement",
+      "Augmenter le timeout de session pour absorber la charge",
+      "Desactiver les journaux pour reduire le bruit"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "La reponse graduee combine blocage immediat, protection du compte et escalade vers le SOC.",
+    "xpReward": 30,
+    "requiredQuizIds": ["bruteforce-defense"]
+  },
+  {
+    "templateId": "iam-17",
+    "title": "Compte Orphelin",
+    "category": "Identite",
+    "learningFocus": "Gestion des identites et acces (IAM)",
+    "prompt": "Un employe a quitte l'entreprise il y a 3 jours. Son compte est toujours actif. Que faire ?",
+    "options": [
+      "Desactiver immediatement le compte, revoquer les tokens et auditer les acces recents",
+      "Laisser actif quelques semaines au cas ou",
+      "Changer uniquement le mot de passe sans desactivation",
+      "Transmettre les credentials a son remplacant"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Les comptes orphelins sont un vecteur d'acces post-depart. La desactivation immediate est obligatoire.",
+    "xpReward": 30,
+    "requiredQuizIds": ["iam-basics"]
+  },
+  {
+    "templateId": "cloud-18",
+    "title": "Bucket Public",
+    "category": "Cloud",
+    "learningFocus": "Fondamentaux securite cloud",
+    "prompt": "Un bucket de stockage cloud vient d'etre cree en acces public par erreur. Premiere action ?",
+    "options": [
+      "Passer le bucket en prive immediatement et auditer les acces depuis la creation",
+      "Laisser public car les donnees ne semblent pas sensibles",
+      "Documenter l'incident sans prendre de mesure immediatement",
+      "Supprimer tous les objets du bucket avant de le fermer"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "La remise en prive est prioritaire, suivie d'un audit pour evaluer ce qui a pu etre expose.",
+    "xpReward": 30,
+    "requiredQuizIds": ["cloud-security-fundamentals"]
+  },
+  {
+    "templateId": "cont-19",
+    "title": "Image Non Scannee",
+    "category": "Infrastructure",
+    "learningFocus": "Securite des conteneurs",
+    "prompt": "Une image Docker tierce vient d'etre utilisee sans scan. Quelle est la bonne pratique ?",
+    "options": [
+      "Scanner l'image immediatement, isoler si vulnerabilite critique, interdire les images non signees",
+      "Continuer a utiliser l'image si elle fonctionne correctement",
+      "Scanner uniquement les images en production, pas en dev",
+      "Desactiver le scan pour accelerer les deploiements"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Toute image non scannee est un risque potentiel. Le scan et la signature sont obligatoires avant usage.",
+    "xpReward": 35,
+    "requiredQuizIds": ["container-security"]
+  },
+  {
+    "templateId": "threat-20",
+    "title": "Modele de Menace",
+    "category": "Architecture",
+    "learningFocus": "Threat modeling",
+    "prompt": "A quelle etape du cycle de developpement integrer le threat modeling ?",
+    "options": [
+      "Des la conception, avant le codage",
+      "Apres la mise en production uniquement",
+      "Seulement lors d'un audit externe",
+      "Jamais, les tests suffisent"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Le threat modeling en phase de conception reduit les couts de correction et previent les failles structurelles.",
+    "xpReward": 40,
+    "requiredQuizIds": ["threat-modeling"]
+  },
+  {
+    "templateId": "pentest-21",
+    "title": "Perimetre Test",
+    "category": "Gouvernance",
+    "learningFocus": "Methodologie pentest",
+    "prompt": "Qu'est-ce qui est indispensable avant de lancer un test de securite ?",
+    "options": [
+      "Une autorisation ecrite avec perimetre, duree et regles d'engagement",
+      "Juste un accord verbal avec le responsable IT",
+      "Aucune autorisation si on teste ses propres outils",
+      "L'accord d'un seul responsable technique suffit"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Un pentest sans mandat ecrit est illegal. L'autorisation formelle protege toutes les parties.",
+    "xpReward": 40,
+    "requiredQuizIds": ["pentest-method"]
+  }
+]

@@ -241,15 +241,50 @@ class _InteractiveTerminalState extends State<InteractiveTerminal> {
               children: [
                 const Icon(Icons.terminal_rounded, size: 14, color: Color(0xFF65FFBF)),
                 const SizedBox(width: 6),
-                Text(
-                  widget.prompt,
-                  style: const TextStyle(fontFamily: 'monospace', fontSize: 12, color: Color(0xFF65FFBF)),
+                Expanded(
+                  child: Text(
+                    widget.prompt,
+                    style: const TextStyle(fontFamily: 'monospace', fontSize: 12, color: Color(0xFF65FFBF)),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-                const Spacer(),
                 if (_done) const Icon(Icons.check_circle_rounded, size: 14, color: Color(0xFF00E5A8)),
               ],
             ),
           ),
+          // commande à saisir (instruction pédagogique)
+          if (!_done)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 10, 12, 2),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Commande à saisir :',
+                    style: TextStyle(fontSize: 11, color: Colors.white54),
+                  ),
+                  const SizedBox(height: 4),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF00E5A8).withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: const Color(0xFF00E5A8).withValues(alpha: 0.3)),
+                    ),
+                    child: Text(
+                      widget.expectedCommand,
+                      style: const TextStyle(
+                        fontFamily: 'monospace',
+                        fontSize: 13,
+                        color: Color(0xFF65FFBF),
+                        letterSpacing: 0.3,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           // historique
           if (_lines.isNotEmpty)
             Padding(
@@ -298,12 +333,12 @@ class _InteractiveTerminalState extends State<InteractiveTerminal> {
                 ],
               ),
             ),
-          if (!_done && widget.hint != null)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+          if (!_done)
+            const Padding(
+              padding: EdgeInsets.fromLTRB(12, 0, 12, 10),
               child: Text(
-                'Indice : ${widget.hint}',
-                style: const TextStyle(fontSize: 11, color: Colors.white38, fontFamily: 'monospace'),
+                'Tape la commande ci-dessus puis appuie sur Entrée.',
+                style: TextStyle(fontSize: 11, color: Colors.white38),
               ),
             ),
         ],

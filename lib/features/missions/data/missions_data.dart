@@ -23,6 +23,9 @@ const List<MissionModel> missionsData = [
         correctOptionIndex: 0,
         explanation:
             'Un volume anormal d’échecs d’authentification est un indicateur classique de tentative d’accès illégitime.',
+        commandChallenge: "auth-sim check-logs --account shared-ops",
+        commandHint: "auth-sim check-logs --account <compte>",
+        commandOutput: "[SIM] 03:41 - 23 auth failures / shared-ops\n[SIM] 03:42 - src 185.220.x.x inconnu\n[SIM] Analyse terminee.",
       ),
       MissionStep(
         title: 'Étape 2 - Action immédiate',
@@ -72,6 +75,9 @@ const List<MissionModel> missionsData = [
         correctOptionIndex: 0,
         explanation:
             'Le domaine réel de l’expéditeur et des liens est un signal décisif pour détecter l’usurpation.',
+        commandChallenge: "mail-sim inspect --id msg-447",
+        commandHint: "mail-sim inspect --id <id>",
+        commandOutput: "[SIM] From: support@paypa1-secure.com\n[SIM] Reply-To: harvest@evil.io\n[SIM] Lien: http://paypa1-secure.com/update",
       ),
       MissionStep(
         title: 'Étape 2 - Lien suspect',
@@ -277,6 +283,9 @@ const List<MissionModel> missionsData = [
         correctOptionIndex: 0,
         explanation:
             'La séquence échecs successifs puis réussite inattendue est typique d’un comportement à investiguer.',
+        commandChallenge: "log-sim filter --event auth-failure --last 1h",
+        commandHint: "log-sim filter --event <type> --last <duree>",
+        commandOutput: "[SIM] 04:17 MFA failure x5 - user: jdupont\n[SIM] 04:18 LOGIN SUCCESS - IP 91.x.x.x (nouveau)\n[SIM] 1 anomalie detectee.",
       ),
       MissionStep(
         title: 'Étape 2 - Corrélation',
@@ -326,6 +335,9 @@ const List<MissionModel> missionsData = [
         correctOptionIndex: 0,
         explanation:
             'Une dépendance vulnérable critique est un risque immédiat à traiter avant mise en production.',
+        commandChallenge: "dep-sim scan --profile release",
+        commandHint: "dep-sim scan --profile <profil>",
+        commandOutput: "[SIM] lodash@4.17.15 - CVE-2021-23337 HIGH\n[SIM] axios@0.19.0 - CVE-2020-28168 HIGH\n[SIM] 2 vulnerabilites critiques.",
       ),
       MissionStep(
         title: 'Étape 2 - Secret management',
@@ -375,6 +387,9 @@ const List<MissionModel> missionsData = [
         correctOptionIndex: 0,
         explanation:
             'Le contrôle à distance est la meilleure réponse immédiate pour protéger les données mobiles.',
+        commandChallenge: "mdm-sim status --device CORP-MOB-042",
+        commandHint: "mdm-sim status --device <id>",
+        commandOutput: "[SIM] CORP-MOB-042 - status: LOST\n[SIM] Last seen: 2026-04-20 18:33\n[SIM] Encryption: ON  Remote wipe: AVAILABLE",
       ),
       MissionStep(
         title: 'Étape 2 - Compte associé',
@@ -424,6 +439,9 @@ const List<MissionModel> missionsData = [
         correctOptionIndex: 0,
         explanation:
             'La restauration doit s’appuyer sur une source vérifiée pour éviter corruption ou perte.',
+        commandChallenge: "backup-sim verify --latest",
+        commandHint: "backup-sim verify --latest",
+        commandOutput: "[SIM] Backup 2026-04-20T02:00Z - INTEGRITY OK\n[SIM] Size: 4.2 GB  Files: 18432\n[SIM] Verification terminee.",
       ),
       MissionStep(
         title: 'Étape 2 - Ordre de reprise',
@@ -473,6 +491,9 @@ const List<MissionModel> missionsData = [
         correctOptionIndex: 0,
         explanation:
             'Les privilèges élevés non contrôlés représentent le risque le plus immédiat.',
+        commandChallenge: "iam-sim audit --scope admin",
+        commandHint: "iam-sim audit --scope <perimetre>",
+        commandOutput: "[SIM] 7 comptes admin permanents\n[SIM] 3 sans justification active\n[SIM] 1 inactif depuis 94 jours.",
       ),
       MissionStep(
         title: 'Étape 2 - Mesure',
@@ -522,6 +543,9 @@ const List<MissionModel> missionsData = [
         correctOptionIndex: 0,
         explanation:
             'L’exposition publique de données sensibles doit être traitée immédiatement.',
+        commandChallenge: "cloud-sim scan --check public-exposure",
+        commandHint: "cloud-sim scan --check <controle>",
+        commandOutput: "[SIM] bucket: prod-data-exports - PUBLIC READ\n[SIM] bucket: logs-archive - PUBLIC LIST\n[SIM] 2 ressources exposees.",
       ),
       MissionStep(
         title: 'Étape 2 - Garde-fou technique',
@@ -571,6 +595,9 @@ const List<MissionModel> missionsData = [
         correctOptionIndex: 0,
         explanation:
             'Le contrôle de validité et de périmètre des tokens protège les endpoints sensibles.',
+        commandChallenge: "api-sim inspect --endpoint /auth/login",
+        commandHint: "api-sim inspect --endpoint <chemin>",
+        commandOutput: "[SIM] 04:00 - 4820 requetes  3411 erreurs 401\n[SIM] src 45.x.x.x - rate limit depasse x17\n[SIM] Anomalie detectee.",
       ),
       MissionStep(
         title: 'Étape 2 - Limitation d’abus',
@@ -620,6 +647,9 @@ const List<MissionModel> missionsData = [
         correctOptionIndex: 0,
         explanation:
             'La préservation correcte des preuves est indispensable pour une analyse fiable.',
+        commandChallenge: "forensic-sim acquire --target srv-prod-01",
+        commandHint: "forensic-sim acquire --target <cible>",
+        commandOutput: "[SIM] Acquiring memory dump srv-prod-01...\n[SIM] 16 GB - SHA256: a3f9c2...done\n[SIM] Image: /evidence/srv-prod-01.img",
       ),
       MissionStep(
         title: 'Étape 2 - Corrélation',

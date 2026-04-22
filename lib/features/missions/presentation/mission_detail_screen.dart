@@ -144,9 +144,11 @@ class _MissionDetailScreenState extends ConsumerState<MissionDetailScreen> {
                   children: [
                     const Icon(Icons.lock_rounded, size: 16, color: Colors.white38),
                     const SizedBox(width: 6),
-                    Text(
-                      'Entre la commande pour déverrouiller cette étape.',
-                      style: const TextStyle(color: Colors.white38, fontSize: 13),
+                    const Expanded(
+                      child: Text(
+                        'Entre la commande pour déverrouiller cette étape.',
+                        style: TextStyle(color: Colors.white38, fontSize: 13),
+                      ),
                     ),
                   ],
                 ),

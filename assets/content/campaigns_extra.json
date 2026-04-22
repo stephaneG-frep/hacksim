@@ -1,1 +1,46 @@
-[]
+[
+  {
+    "id": "nomade-securise",
+    "title": "Nomade Securise",
+    "description": "Maitriser la securite en mobilite : WiFi public, VPN, et gestion d'un terminal perdu.",
+    "badgeName": "Badge Nomade Securise",
+    "steps": [
+      {"type": "course", "targetId": "wifi-security",   "label": "Cours: WiFi et securite sans fil"},
+      {"type": "course", "targetId": "vpn-remote-work", "label": "Cours: VPN et travail distant securise"},
+      {"type": "mission","targetId": "mobile-lockdown", "label": "Mission: Mobile Lockdown"}
+    ]
+  },
+  {
+    "id": "resilience-ransomware",
+    "title": "Resilience Ransomware",
+    "description": "Comprendre les ransomwares, durcir les sauvegardes et s'entrainer a la restauration.",
+    "badgeName": "Badge Resilience Ransomware",
+    "steps": [
+      {"type": "course", "targetId": "ransomware-response",   "label": "Cours: Ransomware prevention et reponse"},
+      {"type": "course", "targetId": "backup-recovery",       "label": "Cours: Sauvegardes et restauration"},
+      {"type": "mission","targetId": "backup-recovery-drill", "label": "Mission: Backup Recovery Drill"}
+    ]
+  },
+  {
+    "id": "defense-proactive",
+    "title": "Defense Proactive",
+    "description": "Reduire l'empreinte numerique, gerer les vulnerabilites et chasser les signaux suspects.",
+    "badgeName": "Badge Defense Proactive",
+    "steps": [
+      {"type": "course", "targetId": "osint-defensive", "label": "Cours: OSINT defensif"},
+      {"type": "course", "targetId": "vuln-management", "label": "Cours: Gestion des vulnerabilites"},
+      {"type": "mission","targetId": "log-hunter",      "label": "Mission: Log Hunter"}
+    ]
+  },
+  {
+    "id": "devsecops-avance",
+    "title": "DevSecOps Avance",
+    "description": "Securiser la chaine logicielle de bout en bout et valider chaque release en production.",
+    "badgeName": "Badge DevSecOps Avance",
+    "steps": [
+      {"type": "course", "targetId": "supply-chain-security", "label": "Cours: Securite de la chaine logicielle"},
+      {"type": "course", "targetId": "container-security",    "label": "Cours: Securite des conteneurs"},
+      {"type": "mission","targetId": "secure-release",        "label": "Mission: Secure Release Gate"}
+    ]
+  }
+]
